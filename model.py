@@ -16,11 +16,11 @@ from keras.preprocessing.text import Tokenizer, text_to_word_sequence
 """
 PROBLEMS:
 1 - how to use multiple embeddings (DONE)
-2 - how to concatenate each of LSTM's output
-3 - how max pooling works in this paper?
-4 - how to feed output of one part of the system to the following time step?
-5 - how big should the hidden layers be?
-6 - how to generate the state before first sentence? (all outputs assume previous sentence)
+2 - how to concatenate each of LSTM's output (DONE)
+3 - how max pooling works in this paper? (DONE)
+4 - how to feed output of one part of the system to the following time step? (DONE)
+5 - how big should the hidden layers be? (?)
+6 - how to generate the state before first sentence (all outputs assume previous sentence)? 
 """
 
 class NeuralModel:
