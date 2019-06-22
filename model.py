@@ -3,11 +3,11 @@ import datetime
 import time
 import sys
 import numpy as np
-import matplotlib.pyplot as plt 
-import matplotlib.pyplot as plt
+from keras import backend as K 
 from keras.layers import Input, Embedding, LSTM, Dense, Bidirectional, concatenate
-from keras.layers import GlobalMaxPooling1D
-from keras.models import Model, load_model
+from keras.layers import GlobalMaxPooling1D, multiply, Reshape, Lambda, Dropout
+from keras.models import Model
+from keras.losses import categorical_crossentropy
 from keras.initializers import Constant
 from keras.optimizers import Adadelta
 from keras.preprocessing.sequence import pad_sequences
@@ -33,8 +33,10 @@ class NeuralModel:
     MAX_SEQUENCE_LENGTH = 180
     MAX_NUM_WORDS = 2800
     GLOVE_EMBEDDING_DIM = 100
-    LSTM_UNITS = 64
+    LSTM_UNITS_1 = 50
+    LSTM_UNITS_2 = 10
     NUM_CATEGORIES = 3
+    DROPOUT = 0.2
 
     def __init__(self, loader, params, verbose = True):
         """
@@ -50,16 +52,19 @@ class NeuralModel:
         self.sentences = None
         self.word_embedding_matrix = None
         # define multiple input and outputs
-        self.X1 = [[], [], []]
-        self.X2 = [[], [], []]
-        self.X3 = [[], [], []]
-        self.Y1 = [[], [], []]
+        self.X1 = [[], [], []] # paragraph token indexes
+        self.X2 = [[], [], []] # relative distance to the participant
+        self.X3 = [[], [], []] # sentence indicator (previous, current, following)
+        self.Y1 = [[], [], []] # output state category 
+        self.Y2 = [[], [], []] # location start position
+        self.Y3 = [[], [], []] # location end position
+        # map from sample index to key =  {pararaph_id, participant_id, sentence_id}
+        self.sample_idx_map = [{}, {}, {}]
+        # map from paragraph indexes to the list of tokens in the paragraph                                        
+        self.ph_idx_tokens_map = [{}, {}, {}]
         # TODO: running setup for each model, even though the input, output and embedding 
         #       matrix should be the same across models.
         self.setup_input()
-
-        self.checkpoint_path = os.path.join(
-            os.getcwd(), "checkpoints", "model%s.h5" % self.time_now_str())
 
     ##################################################################################
     ### Utils
@@ -70,29 +75,14 @@ class NeuralModel:
         arrow = '=' * int(round(percent * bar_length)-1) + '>'
         spaces = ' ' * (bar_length - len(arrow))
 
-        sys.stdout.write("\rPercent: [{0}] {1}% # {2}".format(
+        sys.stdout.write("\rPercent: [{0}] {1:3d}% # {2}".format(
             arrow + spaces, int(round(percent * 100)), comment))
         sys.stdout.flush()
 
-    def time_now_str(self):
-        return datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-
-    def plot_and_save_cost_history(self, cost_history, fig_filename = None):
-        if fig_filename is None:
-            fig_filename = os.path.join(
-                os.getcwd(), "plots", 'cost_history_' + self.time_now_str() + '.png')
-        plt.plot(cost_history)
-        plt.ylabel('Cost')
-        plt.xlabel('Epoch')
-        if fig_filename is None:
-            plt.show()
-        else:
-            plt.savefig(fig_filename)
-
-    def restore_model(self, file_path):
-        self.checkpoint_path = file_path
-        self.model = load_model(self.checkpoint_path)
-        print("Model loaded from: ", self.checkpoint_path)
+    def restore_model(self):
+        self.create_model()
+        self.model.load_weights(self.params.checkpoint_path)
+        print("Model loaded from: ", self.params.checkpoint_path)
         print("self.model.summary()", self.model.summary())
 
     ##################################################################################
@@ -124,8 +114,14 @@ class NeuralModel:
                 # words not found in embedding index will be all-zeros.
                 self.word_embedding_matrix[i] = embedding_vector
         
-        if self.verbose:                
+        if self.verbose:         
             print("embedding shape: ", self.word_embedding_matrix.shape)
+
+    def _tokens_similar(self, tokens_1, tokens_2):
+        for t1, t2 in zip(tokens_1, tokens_2):
+            if not (t1 in t2 or t2 in t1) or abs(len(t1) - len(t2)) > 2:
+                return False
+        return True
 
     def _get_participant_positions(self, participant, paragraph_tokens):
         participant = participant.split(";")
@@ -135,7 +131,7 @@ class NeuralModel:
         for p in participant_tokens:
             p_size = len(p)
             for i in range(len(paragraph_tokens) - p_size + 1):
-                if paragraph_tokens[i: i + p_size] == p:
+                if self._tokens_similar(paragraph_tokens[i: i + p_size], p):
                     participant_indices += [(i, i + p_size - 1)]
         participant_indices = list(set(participant_indices))
         participant_indices.sort()
@@ -143,6 +139,25 @@ class NeuralModel:
             # handle cases where no participant is found.
             participant_indices = [(0, 0)]
         return participant_indices
+
+    def _get_before_after_locations(self, state, paragraph_tokens, sentence_offset, 
+            sentence_length):
+        if state == "-":
+            return (-1, -1)
+        if state == "?":
+            return (-2, -2)
+        state_tokes = text_to_word_sequence(state)
+        state_indeces = []
+        s_size = len(state_tokes)
+        for i in range(len(paragraph_tokens) - s_size + 1):
+            if self._tokens_similar(paragraph_tokens[i: i + s_size], state_tokes):
+                state_indeces += [i]
+        if len(state_indeces) == 0:
+            # couldn't find location inside paragraph
+            return (-2, -2)
+        start_loc = min(state_indeces, 
+            key = lambda x: abs(sentence_offset + int(sentence_length / 2.0) - x))
+        return (start_loc, start_loc + s_size -1)
 
     def _create_participant_pos_input(self, participant_indices, sentence_offset, 
             sentence_length, paragraph_len):
@@ -182,57 +197,96 @@ class NeuralModel:
         """
         for p_name, p_idx in self.loader.part.items():
             data = self.loader.data[p_idx]
-            for paragraph in data:
+            sample_idx = 0
+            for ph_idx, paragraph in enumerate(data):
                 paragraph_text = " ".join(paragraph["sentences"])
                 paragraph_tokens = text_to_word_sequence(paragraph_text)
+                self.ph_idx_tokens_map[p_idx][ph_idx] = paragraph_tokens
                 paragraph_sequences = self.tokenizer.texts_to_sequences([paragraph_text])[0]
                 sentence_offset = 0
                 for p, participant in enumerate(paragraph["participants"]):
-                    participant_indices = self._get_participant_positions(participant, paragraph_tokens)
+                    participant_indices = self._get_participant_positions(
+                        participant, paragraph_tokens)
                     for s, sentence in enumerate(paragraph["sentences"]):
                         sentence_tokens = text_to_word_sequence(sentence)
                         sentence_length = len(sentence_tokens)
                         paragraph_len = len(paragraph_tokens)
+                        state = paragraph["states"][s+1][p]
                         sentence_input = self._create_sentece_input(
                             sentence_offset, sentence_length, paragraph_len)
                         position_input = self._create_participant_pos_input(
                             participant_indices, sentence_offset, sentence_length, paragraph_len)
                         sentence_offset += len(sentence_tokens)
+                        location_start, location_end = self._get_before_after_locations(
+                            state, paragraph_tokens, sentence_offset, sentence_length)
 
                         # add corresponding input.
-                        # TODO: normalize input (make it between -1 and 1)
                         self.X1[p_idx].append(paragraph_sequences)
                         self.X2[p_idx].append(sentence_input)
                         self.X3[p_idx].append(position_input)
 
                         # Create a expected output for 3 types of states: does not exist, 
                         # location unknown, location known.
+                        # Also adds corresponding location start and end position
                         key = (s,p)
                         prediction = paragraph["predictions"][key]
                         self.Y1[p_idx].append(
                             [1 if prediction == i else 0 for i in range(self.NUM_CATEGORIES)])
+                        self.Y2[p_idx].append(
+                            [1 if location_start == i else 0 
+                                for i in range(self.MAX_SEQUENCE_LENGTH)])
+                        self.Y3[p_idx].append(
+                            [1 if location_end == i else 0 
+                                for i in range(self.MAX_SEQUENCE_LENGTH)])
+
+                        # update sample index
+                        self.sample_idx_map[p_idx][sample_idx] = (ph_idx, p, s)
+                        sample_idx += 1
 
             # pad sequences
-            self.X1[p_idx] = pad_sequences(self.X1[p_idx], maxlen=self.MAX_SEQUENCE_LENGTH)
-            self.X2[p_idx] = pad_sequences(self.X2[p_idx], maxlen=self.MAX_SEQUENCE_LENGTH)
-            self.X3[p_idx] = pad_sequences(self.X3[p_idx], maxlen=self.MAX_SEQUENCE_LENGTH)
+            self.X1[p_idx] = pad_sequences(self.X1[p_idx], maxlen=self.MAX_SEQUENCE_LENGTH, padding='post')
+            self.X2[p_idx] = pad_sequences(self.X2[p_idx], maxlen=self.MAX_SEQUENCE_LENGTH, padding='post')
+            self.X3[p_idx] = pad_sequences(self.X3[p_idx], maxlen=self.MAX_SEQUENCE_LENGTH, padding='post')            
             self.Y1[p_idx] = np.array(self.Y1[p_idx])
+            self.Y3[p_idx] = np.array(self.Y2[p_idx])
+            self.Y2[p_idx] = np.array(self.Y3[p_idx])
 
     ##################################################################################
     ### Model
     ##################################################################################
+
+    def _location_span_module(self, prev_probs, tokens_lstm_encoder, tokens_lstm_encoder_last):
+        prev_probs_reshaped = Reshape((self.MAX_SEQUENCE_LENGTH, 1))(prev_probs)
+        weighted_tokens = multiply([prev_probs_reshaped, tokens_lstm_encoder])
+        weighted_tokens_seq = concatenate([tokens_lstm_encoder, weighted_tokens])
+        # weighted_tokens_seq = Dropout(self.DROPOUT)(weighted_tokens_seq)
+        vector_rep_encoder = LSTM(self.LSTM_UNITS_2, return_sequences=False)(weighted_tokens_seq)
+        vector_rep_seq = concatenate([vector_rep_encoder, tokens_lstm_encoder_last])
+        # vector_rep_seq = Dropout(self.DROPOUT)(vector_rep_seq)
+        output = Dense(self.MAX_SEQUENCE_LENGTH, activation='softmax')(vector_rep_seq)
+        return output
+
+    @staticmethod
+    def custom_loss(idx, loss_weights):
+        flat_loss_weights = K.reshape(loss_weights, (3,))
+        return lambda y_true, y_pred: \
+            K.gather(flat_loss_weights, idx) * categorical_crossentropy(y_true, y_pred)
+        
 
     def create_model(self):
         # specifying input for sample
         input_tokens = Input(shape=(self.MAX_SEQUENCE_LENGTH,))
         input_distances = Input(shape=(self.MAX_SEQUENCE_LENGTH,))
         input_sent_pos = Input(shape=(self.MAX_SEQUENCE_LENGTH,))
-        prev_cat_probs = Input(shape=(self.NUM_CATEGORIES,))        
+        loss_weights = Input(shape=(3,))
+        prev_cat_probs = Input(shape=(self.NUM_CATEGORIES,))
+        prev_start_probs = Input(shape=(self.MAX_SEQUENCE_LENGTH,))
 
         # create embedding layers
         tokens_emb = Embedding(output_dim=self.GLOVE_EMBEDDING_DIM, 
             input_dim=self.MAX_NUM_WORDS,
             input_length=self.MAX_SEQUENCE_LENGTH, 
+            # uses constant GloVe embeddings
             embeddings_initializer=Constant(self.word_embedding_matrix))(input_tokens)
         distances_emb = Embedding(output_dim=50, 
             input_dim=self.MAX_SEQUENCE_LENGTH,
@@ -242,96 +296,184 @@ class NeuralModel:
 
         # concatenate all embedding layers 
         sequence = concatenate([tokens_emb, distances_emb, sent_pos_emb])
-        lstm_encoder = Bidirectional(LSTM(self.LSTM_UNITS, return_sequences=True))(sequence)
-        max_pooling = GlobalMaxPooling1D(data_format="channels_first")(lstm_encoder)
-        hidden_category = concatenate([prev_cat_probs, max_pooling])
-        category_output = Dense(self.NUM_CATEGORIES, activation='softmax')(hidden_category)
+        tokens_lstm_encoder = Bidirectional(LSTM(self.LSTM_UNITS_1, return_sequences=True))(sequence)
+        tokens_lstm_encoder_last = Lambda(lambda x: x[:,-1:,:])(tokens_lstm_encoder)
+        tokens_lstm_encoder_last = Reshape((2 * self.LSTM_UNITS_1,))(tokens_lstm_encoder_last)
 
-        # This creates a model that includes
-        # the Input layer and three Dense layers
-        self.model = Model(inputs=[input_tokens, input_distances, input_sent_pos, prev_cat_probs], 
-            outputs=[category_output])
+        # compute category output
+        max_pooling = GlobalMaxPooling1D(data_format="channels_first")(tokens_lstm_encoder)
+        hidden_category = concatenate([prev_cat_probs, max_pooling])
+        # hidden_category = Dropout(self.DROPOUT)(hidden_category)
+        category_output = Dense(self.NUM_CATEGORIES, activation='softmax')(hidden_category) 
+        
+        # compute the start and end position output
+        start_output = self._location_span_module(
+            prev_start_probs, tokens_lstm_encoder, tokens_lstm_encoder_last)
+        end_output = self._location_span_module(
+            start_output, tokens_lstm_encoder, tokens_lstm_encoder_last)
+
+        # Create and compile model
+        self.model = Model(inputs=[input_tokens, input_distances, input_sent_pos, 
+            loss_weights, prev_cat_probs, prev_start_probs], 
+            outputs=[category_output, start_output, end_output])
+        # self.model.compile(optimizer=Adadelta(lr=self.params.lr),
+        #     loss=[self.custom_loss(idx, loss_weights) for idx in range(3)])
         self.model.compile(optimizer=Adadelta(lr=self.params.lr),
-            loss='categorical_crossentropy', metrics=['accuracy'])
-        print("self.model.summary()", self.model.summary())
+            loss=[categorical_crossentropy for _ in range(3)], 
+            loss_weights=[1, 0, 0],
+            metrics=['acc'])
+        if self.verbose:
+            print("self.model.summary()", self.model.summary())
 
         
     ##################################################################################
     ### Training and Testing
     ##################################################################################
 
-    def get_inputs_and_outputs(self, part_index, sample_idx):
+    def _get_inputs_and_outputs(self, part_index, sample_idx, y1_prev, y2_prev):
+        ph_idx, p, s = self.sample_idx_map[part_index][sample_idx]
+        if (p == 0 and s == 0) or y1_prev is None:
+            y1_prev = np.array([self.NUM_CATEGORIES * [1.0 / self.NUM_CATEGORIES]])
+        if (p == 0 and s == 0) or y2_prev is None:
+            y2_prev = np.array([self.MAX_SEQUENCE_LENGTH * [1.0 / self.MAX_SEQUENCE_LENGTH]])
+
         x1 = self.X1[part_index][sample_idx:sample_idx+1]
         x2 = self.X2[part_index][sample_idx:sample_idx+1]
         x3 = self.X3[part_index][sample_idx:sample_idx+1]
         y1 = self.Y1[part_index][sample_idx:sample_idx+1]
-        return [x1, x2, x3], [y1]
+        y2 = self.Y2[part_index][sample_idx:sample_idx+1]
+        y3 = self.Y3[part_index][sample_idx:sample_idx+1]
+        loss_weights = [[1.0/3.0 for _ in range(3)]] if y1[0][2] == 1 else [[1, 0, 0]]
+        loss_weights = np.array(loss_weights)
+        return [x1, x2, x3, loss_weights, y1_prev, y2_prev], [y1, y2, y3]
 
     def train_model(self):
-        # get arguments from params
+        """
+        Train the neural network (ProGlobal) model.
+        """
         train_idx = self.loader.part["train"]
-        print("self.X1[train_idx].shape", self.X1[train_idx].shape)
-        print("self.X2[train_idx].shape", self.X2[train_idx].shape)
-        print("self.X3[train_idx].shape", self.X3[train_idx].shape)
-        print("self.Y1[train_idx].shape\n", self.Y1[train_idx].shape)
+        if self.verbose:
+            print("self.X1[train_idx].shape", self.X1[train_idx].shape)
+            print("self.X2[train_idx].shape", self.X2[train_idx].shape)
+            print("self.X3[train_idx].shape", self.X3[train_idx].shape)
+            print("self.Y1[train_idx].shape", self.Y1[train_idx].shape)
+            print("self.Y2[train_idx].shape", self.Y2[train_idx].shape)
+            print("self.Y3[train_idx].shape", self.Y3[train_idx].shape, "\n")
 
         num_samples = len(self.X1[train_idx])
         cost_history = []
         cost = 0
-
+        print(self.model.metrics_names)
         print("\n### Training starting")
         for epoch in range(self.params.epochs):
             start_time = time.time()
-            cost = 0
-            y1_prev = np.array([self.NUM_CATEGORIES * [1.0 / self.NUM_CATEGORIES]])
+            cost = category_accuracy = 0
+
+            y1_prev = y2_prev = None
             print("\nEpoch %d/%d" % (epoch + 1, self.params.epochs))
             for sample_idx in range(num_samples):
                 # run training and prediction on sample
-                inputs, outputs = self.get_inputs_and_outputs(train_idx, sample_idx)
-                inputs += [y1_prev]
-                loss = self.model.train_on_batch(x=inputs, y=outputs)
-                y1_prev = self.model.predict_on_batch(x=inputs)
-                cost += loss[0]
+                inputs, outputs = self._get_inputs_and_outputs(
+                    train_idx, sample_idx, y1_prev, y2_prev)
+                metrics = self.model.train_on_batch(x=inputs, y=outputs)
+                y1_prev, y2_prev, _ = self.model.predict_on_batch(x=inputs)
+                loss = metrics[0]
+                cost += loss
+                category_accuracy += metrics[4]
 
                 # print current stats
-                if sample_idx % 10 == 0  or sample_idx == (num_samples-1):
+                if sample_idx % 2 == 0 or sample_idx == (num_samples-1):
                     avg_cost = float(cost / (sample_idx + 1))
+                    avg_category_accuracy = float(category_accuracy / (sample_idx + 1))
                     elapsed_time = (time.time() - start_time) / 60.0
                     self.print_progress_bar(sample_idx + 1, num_samples, 
-                        "cost: %.3f, elapsed time (min): %.2f" % (avg_cost, elapsed_time))
+                        "loss: %.3f, avg_cost: %.3f, cat_acc: %.3f, elapsed time (min): %.2f" % (loss, 
+                            avg_cost, avg_category_accuracy, elapsed_time))
 
                 # save model
                 if sample_idx % 100 == 0  or sample_idx == (num_samples-1):
-                    self.model.save(self.checkpoint_path)
+                    self.model.save_weights(self.params.checkpoint_path)
             cost_history.append(cost/num_samples)
-        self.model.save(self.checkpoint_path)
+        self.model.save(self.params.checkpoint_path)
         print("\n### Training finished")
         print("final cost: ", cost/num_samples)
-        print("Model saved: ", self.checkpoint_path)
+        print("Model saved to: ", self.params.checkpoint_path)
         return cost_history
 
+    def _get_position(self, y, paragraph_tokens):
+        # TODO: get final location
+        category = np.argmax(y[0])
+        start_pos = np.argmax(y[1])
+        end_pos = np.argmax(y[2])
+        p_len = len(paragraph_tokens)
+        if category == 0:
+            return "-"
+        if category == 1 or start_pos >= p_len:
+            return "?"
+        if end_pos < start_pos:
+            end_pos = start_pos
+        if end_pos > start_pos + 2:
+            end_pos = min(start_pos + 2, p_len-1)
+        return " ".join(paragraph_tokens[start_pos: end_pos+1])
+
+    def _update_output_grid(self, output_grid, data, sample_idx, y_cur, y_prev):
+        """
+        Output format follows evaluation from https://arxiv.org/pdf/1808.10012.pdf:
+        PID SID PARTICIPANT CHANGE FROM_LOC TO_LOC
+        where "CHANGE" can be ("NONE","MOVE","DESTROY","CREATE")
+        """
+        test_idx = self.loader.part["test"]
+        ph_idx, p, s = self.sample_idx_map[test_idx][sample_idx]
+        paragraph = data[ph_idx]
+        pid = paragraph["PID"]
+        participant = paragraph["participants"][p]
+        change = "NONE"
+        paragraph_tokens = self.ph_idx_tokens_map[test_idx][ph_idx]
+        from_loc = self._get_position(y_prev, paragraph_tokens)
+        to_loc = self._get_position(y_cur, paragraph_tokens)
+        if from_loc != to_loc:
+            if to_loc == "-":
+                change = "DESTROY"
+            elif from_loc == "-":
+                change = "CREATE"
+            else:
+                change = "MOVE"
+        output_grid.append([pid, s, participant, change, from_loc, to_loc])
+
     def output_test_predictions(self):
-        test_idx = self.loader.part["train"]
+        """
+        Runs trained model on test data
+        Generates the output grid and prints it in a file for later evaluation.
+        """
+        test_idx = self.loader.part["test"]
         num_samples = len(self.X1[test_idx])
+        data = self.loader.data[test_idx]
         cost = 0
         start_time = time.time()
-        y1_prev = np.array([self.NUM_CATEGORIES * [1.0 / self.NUM_CATEGORIES]])
 
+        # record previous outputs
+        y1_prev = y2_prev = y3_prev = None
+        output_grid = []
         print("\n### Test starting")
         for sample_idx in range(num_samples):
-            # runt prediction on test sample
-            inputs, outputs = self.get_inputs_and_outputs(test_idx, sample_idx)
-            inputs += [y1_prev]
+
+            # run prediction on test sample
+            inputs, outputs = self._get_inputs_and_outputs(
+                test_idx, sample_idx, y1_prev, y2_prev)
             loss = self.model.test_on_batch(x=inputs, y=outputs)
-            y1_prev = self.model.predict_on_batch(x=inputs)
-            cost += loss[0]
+            y_cur = self.model.predict_on_batch(x=inputs)
+            self._update_output_grid(output_grid, data, sample_idx, 
+                y_cur, y_prev = [y1_prev, y2_prev, y3_prev])
+            y1_prev, y2_prev, y3_prev = y_cur
 
             # print current stats
+            cost += loss[0]
             if sample_idx % 10 == 0 or sample_idx == (num_samples-1):
                 avg_cost = float(cost / (sample_idx + 1))
                 elapsed_time = (time.time() - start_time) / 60.0
                 self.print_progress_bar(sample_idx + 1, num_samples, 
                     "cost: %.3f, elapsed time (min): %.2f" % (avg_cost, elapsed_time))
-
+        final_cost = cost/num_samples
         print("\n### Test finished")
-        print("final cost: ", cost/num_samples)
+        print("final cost: ", final_cost)
+        return output_grid, final_cost
