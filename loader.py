@@ -93,7 +93,7 @@ class Loader:
                             break
 
     def load_embeddings(self):
-        with open(os.path.join(self.glove_dir, 'glove.6B.100d.txt'),  encoding="utf8") as f:
+        with open(os.path.join(self.glove_dir, 'glove.6B.50d.txt'),  encoding="utf8") as f:
             for line in f:
                 values = line.split()
                 word = values[0]

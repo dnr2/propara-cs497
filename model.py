@@ -3,6 +3,7 @@ import datetime
 import time
 import sys
 import numpy as np
+import tensorflow as tf
 from keras import backend as K 
 from keras.layers import Input, Embedding, LSTM, Dense, Bidirectional, concatenate
 from keras.layers import GlobalMaxPooling1D, multiply, Reshape, Lambda, Dropout
@@ -12,6 +13,7 @@ from keras.initializers import Constant
 from keras.optimizers import Adadelta
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer, text_to_word_sequence
+from keras.callbacks import TensorBoard
 
 """
 PROBLEMS:
@@ -30,10 +32,11 @@ class NeuralModel:
     """
     
     # Constants
-    MAX_SEQUENCE_LENGTH = 180
+    MAX_SEQUENCE_LENGTH = 150
     MAX_NUM_WORDS = 2800
-    GLOVE_EMBEDDING_DIM = 100
-    LSTM_UNITS_1 = 50
+    GLOVE_EMBEDDING_DIM = 50
+    SENT_EMBEDDING_DIM = 5
+    LSTM_UNITS_1 = 100
     LSTM_UNITS_2 = 10
     NUM_CATEGORIES = 3
     DROPOUT = 0.2
@@ -97,9 +100,11 @@ class NeuralModel:
     def text_preprocessing(self):
         paragraphs = self.loader.data[self.loader.part["train"]]
         self.sentences = [sent for parag in paragraphs for sent in parag["sentences"]]
-        self.tokenizer = Tokenizer(num_words=self.MAX_NUM_WORDS)
+        self.tokenizer = Tokenizer(num_words=self.MAX_NUM_WORDS, filters = [])
         self.tokenizer.fit_on_texts(self.sentences)
         self.word_index = self.tokenizer.word_index
+        self.reverse_word_index = {i : word for word, i in self.word_index.items()}
+
         if self.verbose:
             print('num unique tokens :', len(self.word_index))
 
@@ -123,9 +128,12 @@ class NeuralModel:
                 return False
         return True
 
+    def _text_to_word_sequence(self, text):
+        return text_to_word_sequence(text, filters='')
+
     def _get_participant_positions(self, participant, paragraph_tokens):
         participant = participant.split(";")
-        participant_tokens = [text_to_word_sequence(p)
+        participant_tokens = [self._text_to_word_sequence(p)
                 for p in participant]
         participant_indices = []
         for p in participant_tokens:
@@ -146,7 +154,7 @@ class NeuralModel:
             return (-1, -1)
         if state == "?":
             return (-2, -2)
-        state_tokes = text_to_word_sequence(state)
+        state_tokes = self._text_to_word_sequence(state)
         state_indeces = []
         s_size = len(state_tokes)
         for i in range(len(paragraph_tokens) - s_size + 1):
@@ -200,7 +208,7 @@ class NeuralModel:
             sample_idx = 0
             for ph_idx, paragraph in enumerate(data):
                 paragraph_text = " ".join(paragraph["sentences"])
-                paragraph_tokens = text_to_word_sequence(paragraph_text)
+                paragraph_tokens = self._text_to_word_sequence(paragraph_text)
                 self.ph_idx_tokens_map[p_idx][ph_idx] = paragraph_tokens
                 paragraph_sequences = self.tokenizer.texts_to_sequences([paragraph_text])[0]
                 sentence_offset = 0
@@ -208,7 +216,7 @@ class NeuralModel:
                     participant_indices = self._get_participant_positions(
                         participant, paragraph_tokens)
                     for s, sentence in enumerate(paragraph["sentences"]):
-                        sentence_tokens = text_to_word_sequence(sentence)
+                        sentence_tokens = self._text_to_word_sequence(sentence)
                         sentence_length = len(sentence_tokens)
                         paragraph_len = len(paragraph_tokens)
                         state = paragraph["states"][s+1][p]
@@ -224,6 +232,13 @@ class NeuralModel:
                         self.X1[p_idx].append(paragraph_sequences)
                         self.X2[p_idx].append(sentence_input)
                         self.X3[p_idx].append(position_input)
+
+                        # print("paragraph_text", paragraph_text)
+                        # print("paragraph_sequences", paragraph_sequences)
+                        # print(list([self.reverse_word_index[p] for p in paragraph_sequences]))
+                        # print("sentence_input", sentence_input)
+                        # print("position_input", position_input)
+                        # input()
 
                         # Create a expected output for 3 types of states: does not exist, 
                         # location unknown, location known.
@@ -273,6 +288,15 @@ class NeuralModel:
             K.gather(flat_loss_weights, idx) * categorical_crossentropy(y_true, y_pred)
         
 
+    def write_log(self, callback, names, logs, batch_no):
+        for name, value in zip(names, logs):
+            summary = tf.Summary()
+            summary_value = summary.value.add()
+            summary_value.simple_value = value
+            summary_value.tag = name
+            callback.writer.add_summary(summary, batch_no)
+            callback.writer.flush()
+
     def create_model(self):
         # specifying input for sample
         input_tokens = Input(shape=(self.MAX_SEQUENCE_LENGTH,))
@@ -288,10 +312,10 @@ class NeuralModel:
             input_length=self.MAX_SEQUENCE_LENGTH, 
             # uses constant GloVe embeddings
             embeddings_initializer=Constant(self.word_embedding_matrix))(input_tokens)
-        distances_emb = Embedding(output_dim=50, 
-            input_dim=self.MAX_SEQUENCE_LENGTH,
+        distances_emb = Embedding(output_dim=self.SENT_EMBEDDING_DIM, 
+            input_dim=2 * self.MAX_SEQUENCE_LENGTH + 1,
             input_length=self.MAX_SEQUENCE_LENGTH)(input_distances)
-        sent_pos_emb = Embedding(output_dim=50, 
+        sent_pos_emb = Embedding(output_dim=self.SENT_EMBEDDING_DIM, 
             input_dim=4, input_length=self.MAX_SEQUENCE_LENGTH)(input_sent_pos)
 
         # concatenate all embedding layers 
@@ -311,18 +335,18 @@ class NeuralModel:
             prev_start_probs, tokens_lstm_encoder, tokens_lstm_encoder_last)
         end_output = self._location_span_module(
             start_output, tokens_lstm_encoder, tokens_lstm_encoder_last)
-
+        
         # Create and compile model
         self.model = Model(inputs=[input_tokens, input_distances, input_sent_pos, 
             loss_weights, prev_cat_probs, prev_start_probs], 
             outputs=[category_output, start_output, end_output])
-        # self.model.compile(optimizer=Adadelta(lr=self.params.lr),
-        #     loss=[self.custom_loss(idx, loss_weights) for idx in range(3)])
-        self.model.compile(optimizer=Adadelta(lr=self.params.lr),
-            loss=[categorical_crossentropy for _ in range(3)], 
-            loss_weights=[1, 0, 0],
-            metrics=['acc'])
+        self.model.compile(optimizer="adam", metrics=['acc'], # optimizer=Adadelta(lr=self.params.lr),
+            loss=[self.custom_loss(idx, loss_weights) for idx in range(3)])
+
         if self.verbose:
+            log_path = os.path.join(os.getcwd(), "logs")
+            self.callback = TensorBoard(log_path)
+            self.callback.set_model(self.model)
             print("self.model.summary()", self.model.summary())
 
         
@@ -339,6 +363,7 @@ class NeuralModel:
 
         x1 = self.X1[part_index][sample_idx:sample_idx+1]
         x2 = self.X2[part_index][sample_idx:sample_idx+1]
+        x2 += self.MAX_SEQUENCE_LENGTH # make all numbers be positive integers
         x3 = self.X3[part_index][sample_idx:sample_idx+1]
         y1 = self.Y1[part_index][sample_idx:sample_idx+1]
         y2 = self.Y2[part_index][sample_idx:sample_idx+1]
@@ -346,6 +371,7 @@ class NeuralModel:
         loss_weights = [[1.0/3.0 for _ in range(3)]] if y1[0][2] == 1 else [[1, 0, 0]]
         loss_weights = np.array(loss_weights)
         return [x1, x2, x3, loss_weights, y1_prev, y2_prev], [y1, y2, y3]
+
 
     def train_model(self):
         """
@@ -367,7 +393,7 @@ class NeuralModel:
         print("\n### Training starting")
         for epoch in range(self.params.epochs):
             start_time = time.time()
-            cost = category_accuracy = 0
+            cost = category_acc = start_acc = end_acc = 0
 
             y1_prev = y2_prev = None
             print("\nEpoch %d/%d" % (epoch + 1, self.params.epochs))
@@ -379,16 +405,22 @@ class NeuralModel:
                 y1_prev, y2_prev, _ = self.model.predict_on_batch(x=inputs)
                 loss = metrics[0]
                 cost += loss
-                category_accuracy += metrics[4]
+                category_acc += metrics[4]
+                start_acc += metrics[5]
+                end_acc += metrics[6]
+
+                self.write_log(self.callback, self.model.metrics_names, metrics, sample_idx)
 
                 # print current stats
                 if sample_idx % 2 == 0 or sample_idx == (num_samples-1):
                     avg_cost = float(cost / (sample_idx + 1))
-                    avg_category_accuracy = float(category_accuracy / (sample_idx + 1))
+                    avg_category_acc = float(category_acc / (sample_idx + 1))
+                    avg_start_acc = float(start_acc / (sample_idx + 1))
+                    avg_end_acc = float(end_acc / (sample_idx + 1))
                     elapsed_time = (time.time() - start_time) / 60.0
                     self.print_progress_bar(sample_idx + 1, num_samples, 
-                        "loss: %.3f, avg_cost: %.3f, cat_acc: %.3f, elapsed time (min): %.2f" % (loss, 
-                            avg_cost, avg_category_accuracy, elapsed_time))
+                        "loss: %.3f, avg_cost: %.3f, acc: %.3f, %.3f, %.3f, time (min): %.2f" % (loss, 
+                            avg_cost, avg_category_acc, avg_start_acc, avg_end_acc, elapsed_time))
 
                 # save model
                 if sample_idx % 100 == 0  or sample_idx == (num_samples-1):
