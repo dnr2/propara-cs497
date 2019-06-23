@@ -2,7 +2,6 @@
 import os
 import sys
 import csv
-import spacy
 import numpy as np
 import random
 import matplotlib
