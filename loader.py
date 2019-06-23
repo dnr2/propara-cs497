@@ -30,9 +30,10 @@ class Loader:
     def print_stats(self):
         # visualize output label distribution on training data (after under-sampling)
 
-        labels = ('none', 'creation', 'destruction', 'movement')
+        labels = ('does not exist', 'location unknown', 'location known')
         y_pos = np.arange(len(labels))
-        outputs = np.array([pred["y"] for par in self.data[self.part["train"]] for pred in par["predictions"]])
+        outputs = np.array([pred for par in self.data[self.part["train"]] 
+            for pred in par["predictions"].values()])
         unique, counts = np.unique(outputs, return_counts=True)
 
         plt.bar(y_pos, counts, align='center', alpha=0.5)

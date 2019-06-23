@@ -4,6 +4,7 @@ import time
 import sys
 import numpy as np
 import tensorflow as tf
+import random
 from keras import backend as K 
 from keras.layers import Input, Embedding, LSTM, Dense, Bidirectional, concatenate
 from keras.layers import GlobalMaxPooling1D, multiply, Reshape, Lambda, Dropout
@@ -397,6 +398,9 @@ class NeuralModel:
 
             y1_prev = y2_prev = None
             print("\nEpoch %d/%d" % (epoch + 1, self.params.epochs))
+            sample_idxs = list(range(num_samples))
+            random.shuffle(sample_idxs)
+            print(sample_idxs[:10])
             for sample_idx in range(num_samples):
                 # run training and prediction on sample
                 inputs, outputs = self._get_inputs_and_outputs(
