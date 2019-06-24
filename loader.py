@@ -106,6 +106,8 @@ def main():
     loader = Loader()
     loader.load_data()
     loader.print_stats()
+    print("len(loader.data[2]) = ", len(loader.data[2]))
+    print("PIDS = ", [p["PID"] for p in loader.data[2]])
 
 if __name__ == "__main__":
     main()

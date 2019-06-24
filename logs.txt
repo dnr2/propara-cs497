@@ -1,0 +1,2248 @@
+bidirectional_1 (Bidirectional) (None, 100, 200)     136800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 100)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            303         global_max_pooling1d_1[0][0]
+==================================================================================================
+Total params: 279,153
+Trainable params: 279,153
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (140, 100)
+self.X2[train_idx].shape (140, 100)
+self.X3[train_idx].shape (140, 100)
+self.Y1[train_idx].shape (140, 3)
+self.Y2[train_idx].shape (140, 100)
+self.Y3[train_idx].shape (140, 100)
+
+['loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_acc', 'dense_1_acc_1', 'dense_1_acc_2']
+
+### Training starting
+
+Epoch 1/10
+2019-06-22 11:02:00.655132: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 11:02:01.176868: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 11:02:01.194477: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 11:02:02.148346: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 11:02:02.155887: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 11:02:02.161011: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 11:02:02.165410: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+Percent: [===================>] 100% # loss: 1.024, avg_cost: 0.864, cat_acc: 0.600, elapsed time (min): 1.28
+Epoch 2/10
+Percent: [===================>] 100% # loss: 1.013, avg_cost: 0.902, cat_acc: 0.571, elapsed time (min): 1.12
+Epoch 3/10
+Percent: [===================>] 100% # loss: 1.026, avg_cost: 0.882, cat_acc: 0.579, elapsed time (min): 1.14
+Epoch 4/10
+Percent: [===================>] 100% # loss: 1.063, avg_cost: 0.859, cat_acc: 0.586, elapsed time (min): 1.14
+Epoch 5/10
+Percent: [===================>] 100% # loss: 1.090, avg_cost: 0.837, cat_acc: 0.579, elapsed time (min): 1.13
+Epoch 6/10
+Percent: [===================>] 100% # loss: 1.115, avg_cost: 0.808, cat_acc: 0.607, elapsed time (min): 1.14
+Epoch 7/10
+Percent: [===================>] 100% # loss: 1.170, avg_cost: 0.785, cat_acc: 0.650, elapsed time (min): 1.14
+Epoch 8/10
+Percent: [===================>] 100% # loss: 1.234, avg_cost: 0.757, cat_acc: 0.679, elapsed time (min): 1.12
+Epoch 9/10
+Percent: [===================>] 100% # loss: 1.344, avg_cost: 0.743, cat_acc: 0.693, elapsed time (min): 1.13
+Epoch 10/10
+Percent: [===================>] 100% # loss: 1.363, avg_cost: 0.722, cat_acc: 0.707, elapsed time (min): 1.11
+### Training finished
+final cost:  0.7220926200704915
+Model saved to:  C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\checkpoints\model2019-06-22_11-01-45.h5
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 5 -ep 10
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=10, lr=1.0, subset=5, test=False, train=True)
+num unique tokens : 126
+embedding shape:  (2800, 50)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 100, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 100, 10)      2010        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 100, 10)      40          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 100, 70)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 100, 200)     136800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 100)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            303         global_max_pooling1d_1[0][0]
+==================================================================================================
+Total params: 279,153
+Trainable params: 279,153
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (140, 100)
+self.X2[train_idx].shape (140, 100)
+self.X3[train_idx].shape (140, 100)
+self.Y1[train_idx].shape (140, 3)
+self.Y2[train_idx].shape (140, 100)
+self.Y3[train_idx].shape (140, 100)
+
+['loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_acc', 'dense_1_acc_1', 'dense_1_acc_2']
+
+### Training starting
+
+Epoch 1/10
+2019-06-22 11:16:42.914695: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 11:16:43.330081: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 11:16:43.341269: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 11:16:44.042498: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 11:16:44.048433: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 11:16:44.052349: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 11:16:44.056083: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+Percent: [===================>]  99% # loss: 0.646, avg_cost: 0.883, cat_acc: 0.525, elapsed time (min): 1.09forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source
+libifcoremd.dll    00007FFDBFB194C4  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FFE087156FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFE0B724034  Unknown               Unknown  Unknown
+ntdll.dll          00007FFE0C073691  Unknown               Unknown  Unknown
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 10 -ep 20
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=20, lr=1.0, subset=10, test=False, train=True)
+num unique tokens : 192
+embedding shape:  (2800, 50)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 100, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 100, 10)      2010        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 100, 10)      40          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 100, 70)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 100, 200)     136800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 100)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            303         global_max_pooling1d_1[0][0]
+==================================================================================================
+Total params: 279,153
+Trainable params: 279,153
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (270, 100)
+self.X2[train_idx].shape (270, 100)
+self.X3[train_idx].shape (270, 100)
+self.Y1[train_idx].shape (270, 3)
+self.Y2[train_idx].shape (270, 100)
+self.Y3[train_idx].shape (270, 100)
+
+['loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_acc', 'dense_1_acc_1', 'dense_1_acc_2']
+
+### Training starting
+
+Epoch 1/20
+2019-06-22 11:18:07.556840: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 11:18:07.984508: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 11:18:07.994478: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 11:18:08.708678: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 11:18:08.714063: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 11:18:08.717254: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 11:18:08.721946: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+Percent: [===================>] 100% # loss: 1.168, avg_cost: 0.974, cat_acc: 0.485, elapsed time (min): 2.13
+Epoch 2/20
+Percent: [===================>] 100% # loss: 1.218, avg_cost: 1.019, cat_acc: 0.489, elapsed time (min): 2.27
+Epoch 3/20
+Percent: [===================>] 100% # loss: 1.242, avg_cost: 1.035, cat_acc: 0.459, elapsed time (min): 2.44
+Epoch 4/20
+Percent: [===================>] 100% # loss: 1.235, avg_cost: 1.026, cat_acc: 0.459, elapsed time (min): 2.27
+Epoch 5/20
+Percent: [===================>] 100% # loss: 1.260, avg_cost: 1.017, cat_acc: 0.456, elapsed time (min): 4.12
+Epoch 6/20
+Percent: [===================>] 100% # loss: 1.218, avg_cost: 1.018, cat_acc: 0.459, elapsed time (min): 1.99
+Epoch 7/20
+Percent: [===================>] 100% # loss: 1.192, avg_cost: 1.005, cat_acc: 0.478, elapsed time (min): 2.25
+Epoch 8/20
+Percent: [===================>] 100% # loss: 1.145, avg_cost: 0.990, cat_acc: 0.500, elapsed time (min): 2.20
+Epoch 9/20
+Percent: [===================>] 100% # loss: 1.131, avg_cost: 0.978, cat_acc: 0.522, elapsed time (min): 2.25
+Epoch 10/20
+Percent: [===================>] 100% # loss: 1.155, avg_cost: 0.973, cat_acc: 0.485, elapsed time (min): 2.24
+Epoch 11/20
+Percent: [===================>] 100% # loss: 1.120, avg_cost: 0.940, cat_acc: 0.533, elapsed time (min): 2.33
+Epoch 12/20
+Percent: [===================>] 100% # loss: 1.213, avg_cost: 1.039, cat_acc: 0.459, elapsed time (min): 2.29
+Epoch 13/20
+Percent: [===================>] 100% # loss: 1.193, avg_cost: 1.033, cat_acc: 0.452, elapsed time (min): 2.28
+Epoch 14/20
+Percent: [=>                  ]   9% # loss: 1.649, avg_cost: 1.224, cat_acc: 0.640, elapsed time (min): 0.21forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source
+libifcoremd.dll    00007FFDBFB194C4  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FFE087156FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFE0B724034  Unknown               Unknown  Unknown
+ntdll.dll          00007FFE0C073691  Unknown               Unknown  Unknown
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 10 -ep 20
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=20, lr=1.0, subset=10, test=False, train=True)
+num unique tokens : 192
+embedding shape:  (2800, 50)
+Traceback (most recent call last):
+  File "main.py", line 117, in <module>
+    main(args)
+  File "main.py", line 90, in main
+    model.create_model()
+  File "C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\model.py", line 365, in create_model
+    self.callback.set_model(model)
+NameError: name 'model' is not defined
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 10 -ep 20
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=20, lr=1.0, subset=10, test=False, train=True)
+num unique tokens : 192
+embedding shape:  (2800, 50)
+2019-06-22 11:50:24.846887: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 11:50:25.265981: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 11:50:25.276483: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 11:50:25.975509: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 11:50:25.982919: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 11:50:25.987079: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 11:50:25.990446: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 100, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 100, 10)      2010        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 100, 10)      40          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 100, 70)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 100, 200)     136800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 100)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            303         global_max_pooling1d_1[0][0]
+==================================================================================================
+Total params: 279,153
+Trainable params: 279,153
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (270, 100)
+self.X2[train_idx].shape (270, 100)
+self.X3[train_idx].shape (270, 100)
+self.Y1[train_idx].shape (270, 3)
+self.Y2[train_idx].shape (270, 100)
+self.Y3[train_idx].shape (270, 100)
+
+['loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_acc', 'dense_1_acc_1', 'dense_1_acc_2']
+
+### Training starting
+
+Epoch 1/20
+Traceback (most recent call last):
+  File "main.py", line 117, in <module>
+    main(args)
+  File "main.py", line 91, in main
+    cost_history = model.train_model()
+  File "C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\model.py", line 431, in train_model
+    self.write_log(self.callback, metrics, self.model.metrics_names, sample_idx)
+  File "C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\model.py", line 295, in write_log
+    summary_value.simple_value = value
+  File "C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\google\protobuf\internal\python_message.py", line 674, in setter
+    field_setter(self, new_value)
+  File "C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\google\protobuf\internal\python_message.py", line 662, in field_setter
+    new_value = type_checker.CheckValue(new_value)
+  File "C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\google\protobuf\internal\type_checkers.py", line 109, in CheckValue
+    raise TypeError(message)
+TypeError: 'loss' has type <class 'str'>, but expected one of: ((<class 'numbers.Real'>,),)
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 10 -ep 20
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=20, lr=1.0, subset=10, test=False, train=True)
+num unique tokens : 192
+embedding shape:  (2800, 50)
+2019-06-22 11:52:17.624133: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 11:52:18.053692: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 11:52:18.063873: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 11:52:18.773284: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 11:52:18.778794: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 11:52:18.783100: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 11:52:18.786352: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 100, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 100, 10)      2010        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 100, 10)      40          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 100, 70)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 100, 200)     136800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 100)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            303         global_max_pooling1d_1[0][0]
+==================================================================================================
+Total params: 279,153
+Trainable params: 279,153
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (270, 100)
+self.X2[train_idx].shape (270, 100)
+self.X3[train_idx].shape (270, 100)
+self.Y1[train_idx].shape (270, 3)
+self.Y2[train_idx].shape (270, 100)
+self.Y3[train_idx].shape (270, 100)
+
+['loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_acc', 'dense_1_acc_1', 'dense_1_acc_2']
+
+### Training starting
+
+Epoch 1/20
+Percent: [===================>] 100% # loss: 1.285, avg_cost: 0.997, cat_acc: 0.493, elapsed time (min): 2.22
+Epoch 2/20
+Percent: [===================>] 100% # loss: 1.172, avg_cost: 0.988, cat_acc: 0.511, elapsed time (min): 2.39
+Epoch 3/20
+Percent: [===================>] 100% # loss: 1.156, avg_cost: 0.957, cat_acc: 0.496, elapsed time (min): 2.38
+Epoch 4/20
+Percent: [===================>] 100% # loss: 0.368, avg_cost: 1.040, cat_acc: 0.454, elapsed time (min): 2.37forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source
+libifcoremd.dll    00007FFDBFB194C4  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FFE087156FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFE0B724034  Unknown               Unknown  Unknown
+ntdll.dll          00007FFE0C073691  Unknown               Unknown  Unknown
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 10 -ep 20
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=20, lr=1.0, subset=10, test=False, train=True)
+num unique tokens : 192
+embedding shape:  (2800, 50)
+forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source
+libifcoremd.dll    00007FFDC5BB94C4  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FFE087156FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFE0B724034  Unknown               Unknown  Unknown
+ntdll.dll          00007FFE0C073691  Unknown               Unknown  Unknown
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 30 -ep 20
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=20, lr=1.0, subset=30, test=False, train=True)
+num unique tokens : 405
+embedding shape:  (2800, 50)
+Traceback (most recent call last):
+  File "main.py", line 117, in <module>
+    main(args)
+  File "main.py", line 90, in main
+    model.create_model()
+  File "C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\model.py", line 357, in create_model
+    outputs=[category_output, category_output, category_output])
+  File "C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\keras\legacy\interfaces.py", line 91, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\keras\engine\network.py", line 93, in __init__
+    self._init_graph_network(*args, **kwargs)
+  File "C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\keras\engine\network.py", line 231, in _init_graph_network
+    self.inputs, self.outputs)
+  File "C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\keras\engine\network.py", line 1443, in _map_graph_network
+    str(layers_with_complete_input))
+ValueError: Graph disconnected: cannot obtain value for tensor Tensor("input_5:0", shape=(?, 3), dtype=float32) at layer "input_5". The following previous layers were accessed without issue: ['input_3', 'input_2', 'input_1', 'embedding_1', 'embedding_2', 'embedding_3', 'concatenate_1', 'bidirectional_1']
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 30 -ep 20
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=20, lr=1.0, subset=30, test=False, train=True)
+num unique tokens : 405
+embedding shape:  (2800, 50)
+2019-06-22 12:05:55.984728: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 12:05:56.406866: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 12:05:56.415812: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 12:05:57.113878: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 12:05:57.119593: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 12:05:57.122772: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 12:05:57.127705: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 100)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 100, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 100, 10)      2010        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 100, 10)      40          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 100, 70)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 100, 300)     265200      concatenate_1[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 100)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 103)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            312         concatenate_2[0][0]
+==================================================================================================
+Total params: 407,562
+Trainable params: 407,562
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (894, 100)
+self.X2[train_idx].shape (894, 100)
+self.X3[train_idx].shape (894, 100)
+self.Y1[train_idx].shape (894, 3)
+self.Y2[train_idx].shape (894, 100)
+self.Y3[train_idx].shape (894, 100)
+
+['loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_loss', 'dense_1_acc', 'dense_1_acc_1', 'dense_1_acc_2']
+
+### Training starting
+
+Epoch 1/20
+Percent: [===================>] 100% # loss: 0.310, avg_cost: 1.064, cat_acc: 0.493, elapsed time (min): 8.27
+Epoch 2/20
+Percent: [====>               ]  27% # loss: 1.103, avg_cost: 1.108, cat_acc: 0.385, elapsed time (min): 2.12forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source
+libifcoremd.dll    00007FFDC5BB94C4  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FFE087156FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFE0B724034  Unknown               Unknown  Unknown
+ntdll.dll          00007FFE0C073691  Unknown               Unknown  Unknown
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 30 -ep 20
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=20, lr=1.0, subset=30, test=False, train=True)
+num unique tokens : 405
+embedding shape:  (2800, 50)
+2019-06-22 12:22:25.210237: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 12:22:25.633302: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 12:22:25.643972: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 12:22:26.343568: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 12:22:26.349086: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 12:22:26.353468: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 12:22:26.356945: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 300)     253200      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 300)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 600)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 300)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 50)           130200      concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 300)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 350)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          52650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 300)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 600)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 50)           130200      concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 350)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          52650       concatenate_6[0][0]
+==================================================================================================
+Total params: 760,887
+Trainable params: 760,887
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (894, 150)
+self.X2[train_idx].shape (894, 150)
+self.X3[train_idx].shape (894, 150)
+self.Y1[train_idx].shape (894, 3)
+self.Y2[train_idx].shape (894, 150)
+self.Y3[train_idx].shape (894, 150)
+
+['loss', 'dense_1_loss', 'dense_2_loss', 'dense_3_loss', 'dense_1_acc', 'dense_2_acc', 'dense_3_acc']
+
+### Training starting
+
+Epoch 1/20
+Traceback (most recent call last):
+  File "main.py", line 117, in <module>
+    main(args)
+  File "main.py", line 91, in main
+    cost_history = model.train_model()
+  File "C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\model.py", line 408, in train_model
+    category_acc += metrics[4]
+UnboundLocalError: local variable 'category_acc' referenced before assignment
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 10 -ep 10
+Traceback (most recent call last):
+  File "main.py", line 8, in <module>
+    from model import NeuralModel
+  File "C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\model.py", line 396
+    cost = category_acc = start_acc = end_acc 0
+                                              ^
+SyntaxError: invalid syntax
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 10 -ep 10
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=10, lr=1.0, subset=10, test=False, train=True)
+num unique tokens : 192
+embedding shape:  (2800, 50)
+2019-06-22 12:23:55.160365: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 12:23:55.587416: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 12:23:55.598971: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 12:23:56.293192: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 12:23:56.300012: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 12:23:56.303769: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 12:23:56.307528: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 300)     253200      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 300)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 600)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 300)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 50)           130200      concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 300)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 350)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          52650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 300)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 600)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 50)           130200      concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 350)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          52650       concatenate_6[0][0]
+==================================================================================================
+Total params: 760,887
+Trainable params: 760,887
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (270, 150)
+self.X2[train_idx].shape (270, 150)
+self.X3[train_idx].shape (270, 150)
+self.Y1[train_idx].shape (270, 3)
+self.Y2[train_idx].shape (270, 150)
+self.Y3[train_idx].shape (270, 150)
+
+['loss', 'dense_1_loss', 'dense_2_loss', 'dense_3_loss', 'dense_1_acc', 'dense_2_acc', 'dense_3_acc']
+
+### Training starting
+
+Epoch 1/10
+Percent: [===>                ]  18% # loss: 2.129, avg_cost: 2.448, acc: 0.286, 0.286, 0.286, time (min): 1.37forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source
+libifcoremd.dll    00007FFDC5BB94C4  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FFE087156FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFE0B724034  Unknown               Unknown  Unknown
+ntdll.dll          00007FFE0C073691  Unknown               Unknown  Unknown
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 10 -ep 10
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=10, lr=1.0, subset=10, test=False, train=True)
+num unique tokens : 192
+embedding shape:  (2800, 50)
+2019-06-22 12:25:40.307773: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 12:25:40.726886: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 12:25:40.737465: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 12:25:41.441904: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 12:25:41.447858: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 12:25:41.451590: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 12:25:41.454724: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 300)     253200      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 300)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 600)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 300)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 50)           130200      concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 300)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 350)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          52650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 300)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 600)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 50)           130200      concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 350)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          52650       concatenate_6[0][0]
+==================================================================================================
+Total params: 760,887
+Trainable params: 760,887
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (270, 150)
+self.X2[train_idx].shape (270, 150)
+self.X3[train_idx].shape (270, 150)
+self.Y1[train_idx].shape (270, 3)
+self.Y2[train_idx].shape (270, 150)
+self.Y3[train_idx].shape (270, 150)
+
+['loss', 'dense_1_loss', 'dense_2_loss', 'dense_3_loss', 'dense_1_acc', 'dense_2_acc', 'dense_3_acc']
+
+### Training starting
+
+Epoch 1/10
+Percent: [===================>] 100% # loss: 4.784, avg_cost: 1.918, acc: 0.030, 0.030, 0.019, time (min): 7.40
+Epoch 2/10
+Percent: [==>                 ]  16% # loss: 1.105, avg_cost: 1.708, acc: 0.093, 0.093, 0.070, time (min): 1.20forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source
+libifcoremd.dll    00007FFDC5BB94C4  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FFE087156FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFE0B724034  Unknown               Unknown  Unknown
+ntdll.dll          00007FFE0C073691  Unknown               Unknown  Unknown
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ss 10 -ep 10
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=10, lr=1.0, subset=10, test=False, train=True)
+forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source
+libifcoremd.dll    00007FFDC5BB94C4  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FFE087156FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFE0B724034  Unknown               Unknown  Unknown
+ntdll.dll          00007FFE0C073691  Unknown               Unknown  Unknown
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train --test -ss 5 -ep 10
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=10, lr=1.0, subset=5, test=True, train=True)
+num unique tokens : 126
+embedding shape:  (2800, 50)
+2019-06-22 12:34:56.110580: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 12:34:56.533996: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 12:34:56.544836: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 12:34:57.245268: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 12:34:57.252621: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 12:34:57.256455: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 12:34:57.261216: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 300)     253200      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 300)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 600)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 300)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 50)           130200      concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 300)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 350)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          52650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 300)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 600)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 50)           130200      concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 350)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          52650       concatenate_6[0][0]
+==================================================================================================
+Total params: 760,887
+Trainable params: 760,887
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (140, 150)
+self.X2[train_idx].shape (140, 150)
+self.X3[train_idx].shape (140, 150)
+self.Y1[train_idx].shape (140, 3)
+self.Y2[train_idx].shape (140, 150)
+self.Y3[train_idx].shape (140, 150)
+
+['loss', 'dense_1_loss', 'dense_2_loss', 'dense_3_loss', 'dense_1_acc', 'dense_2_acc', 'dense_3_acc']
+
+### Training starting
+
+Epoch 1/10
+Percent: [===================>] 100% # loss: 3.564, avg_cost: 1.966, acc: 0.507, 0.014, 0.007, time (min): 4.08
+Epoch 2/10
+Percent: [===================>] 100% # loss: 2.631, avg_cost: 1.436, acc: 0.571, 0.029, 0.036, time (min): 3.87
+Epoch 3/10
+Percent: [===================>] 100% # loss: 2.559, avg_cost: 1.437, acc: 0.579, 0.029, 0.014, time (min): 3.79
+Epoch 4/10
+Percent: [===================>] 100% # loss: 2.402, avg_cost: 1.395, acc: 0.579, 0.036, 0.021, time (min): 3.80
+Epoch 5/10
+Percent: [===================>] 100% # loss: 2.424, avg_cost: 1.376, acc: 0.571, 0.057, 0.029, time (min): 3.80
+Epoch 6/10
+Percent: [===================>] 100% # loss: 2.209, avg_cost: 1.317, acc: 0.571, 0.057, 0.050, time (min): 3.78
+Epoch 7/10
+Percent: [===================>] 100% # loss: 2.320, avg_cost: 1.247, acc: 0.571, 0.079, 0.064, time (min): 3.84
+Epoch 8/10
+Percent: [===================>] 100% # loss: 2.378, avg_cost: 1.292, acc: 0.571, 0.064, 0.057, time (min): 3.80
+Epoch 9/10
+Percent: [===================>] 100% # loss: 2.501, avg_cost: 1.208, acc: 0.579, 0.079, 0.100, time (min): 3.79
+Epoch 10/10
+Percent: [===================>] 100% # loss: 2.197, avg_cost: 1.188, acc: 0.579, 0.093, 0.100, time (min): 3.82
+### Training finished
+final cost:  1.1878425389528275
+Model saved to:  C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\checkpoints\model2019-06-22_12-34-44.h5
+
+### Test starting
+Percent: [===================>] 100% # cost: 2.965, elapsed time (min): 2.74
+### Test finished
+final cost:  2.9645421193515666
+37 0 plant; animal CREATE - ?
+37 1 plant; animal NONE ? ?
+37 2 plant; animal NONE ? ?
+37 3 plant; animal NONE ? ?
+37 4 plant; animal NONE ? ?
+37 5 plant; animal NONE ? ?
+37 0 soft tissues NONE ? ?
+37 1 soft tissues NONE ? ?
+37 2 soft tissues NONE ? ?
+37 3 soft tissues NONE ? ?
+37 4 soft tissues NONE ? ?
+37 5 soft tissues NONE ? ?
+37 0 bones NONE ? ?
+37 1 bones NONE ? ?
+37 2 bones NONE ? ?
+37 3 bones NONE ? ?
+37 4 bones NONE ? ?
+37 5 bones NONE ? ?
+37 0 mineral NONE ? ?
+37 1 mineral NONE ? ?
+37 2 mineral NONE ? ?
+37 3 mineral NONE ? ?
+37 4 mineral NONE ? ?
+37 5 mineral NONE ? ?
+37 0 fossils NONE ? ?
+37 1 fossils NONE ? ?
+37 2 fossils NONE ? ?
+37 3 fossils NONE ? ?
+37 4 fossils NONE ? ?
+37 5 fossils NONE ? ?
+38 0 animal; body NONE ? ?
+38 1 animal; body NONE ? ?
+38 2 animal; body NONE ? ?
+38 3 animal; body NONE ? ?
+38 4 animal; body NONE ? ?
+38 5 animal; body NONE ? ?
+38 6 animal; body NONE ? ?
+38 0 soil NONE ? ?
+38 1 soil NONE ? ?
+38 2 soil NONE ? ?
+38 3 soil NONE ? ?
+38 4 soil NONE ? ?
+38 5 soil NONE ? ?
+38 6 soil NONE ? ?
+38 0 rock NONE ? ?
+38 1 rock NONE ? ?
+38 2 rock NONE ? ?
+38 3 rock NONE ? ?
+38 4 rock NONE ? ?
+38 5 rock NONE ? ?
+38 6 rock NONE ? ?
+38 0 fossil NONE ? ?
+38 1 fossil NONE ? ?
+38 2 fossil NONE ? ?
+38 3 fossil NONE ? ?
+38 4 fossil NONE ? ?
+38 5 fossil NONE ? ?
+38 6 fossil NONE ? ?
+67 0 plants; dead plants NONE ? ?
+67 1 plants; dead plants NONE ? ?
+67 2 plants; dead plants NONE ? ?
+67 3 plants; dead plants NONE ? ?
+67 4 plants; dead plants NONE ? ?
+67 5 plants; dead plants NONE ? ?
+67 6 plants; dead plants NONE ? ?
+67 7 plants; dead plants NONE ? ?
+67 8 plants; dead plants NONE ? ?
+67 0 peat NONE ? ?
+67 1 peat NONE ? ?
+67 2 peat NONE ? ?
+67 3 peat NONE ? ?
+67 4 peat NONE ? ?
+67 5 peat NONE ? ?
+67 6 peat NONE ? ?
+67 7 peat NONE ? ?
+67 8 peat NONE ? ?
+67 0 coal NONE ? ?
+67 1 coal NONE ? ?
+67 2 coal NONE ? ?
+67 3 coal NONE ? ?
+67 4 coal NONE ? ?
+67 5 coal NONE ? ?
+67 6 coal NONE ? ?
+67 7 coal NONE ? ?
+67 8 coal NONE ? ?
+68 0 plants; trees NONE ? ?
+68 1 plants; trees NONE ? ?
+68 2 plants; trees NONE ? ?
+68 3 plants; trees NONE ? ?
+68 4 plants; trees NONE ? ?
+68 5 plants; trees NONE ? ?
+68 6 plants; trees NONE ? ?
+68 0 plant and tree remains NONE ? ?
+68 1 plant and tree remains NONE ? ?
+68 2 plant and tree remains NONE ? ?
+68 3 plant and tree remains NONE ? ?
+68 4 plant and tree remains NONE ? ?
+68 5 plant and tree remains NONE ? ?
+68 6 plant and tree remains NONE ? ?
+68 0 peat; burial peat NONE ? ?
+68 1 peat; burial peat NONE ? ?
+68 2 peat; burial peat NONE ? ?
+68 3 peat; burial peat NONE ? ?
+68 4 peat; burial peat NONE ? ?
+68 5 peat; burial peat NONE ? ?
+68 6 peat; burial peat NONE ? ?
+68 0 water NONE ? ?
+68 1 water NONE ? ?
+68 2 water NONE ? ?
+68 3 water NONE ? ?
+68 4 water NONE ? ?
+68 5 water NONE ? ?
+68 6 water NONE ? ?
+68 0 heat NONE ? ?
+68 1 heat NONE ? ?
+68 2 heat NONE ? ?
+68 3 heat NONE ? ?
+68 4 heat NONE ? ?
+68 5 heat NONE ? ?
+68 6 heat NONE ? ?
+68 0 coal NONE ? ?
+68 1 coal NONE ? ?
+68 2 coal NONE ? ?
+68 3 coal NONE ? ?
+68 4 coal NONE ? ?
+68 5 coal NONE ? ?
+68 6 coal NONE ? ?
+69 0 plants;trees NONE ? ?
+69 1 plants;trees NONE ? ?
+69 2 plants;trees NONE ? ?
+69 3 plants;trees NONE ? ?
+69 4 plants;trees NONE ? ?
+69 5 plants;trees NONE ? ?
+69 6 plants;trees NONE ? ?
+69 0 peat NONE ? ?
+69 1 peat NONE ? ?
+69 2 peat NONE ? ?
+69 3 peat NONE ? ?
+69 4 peat NONE ? ?
+69 5 peat NONE ? ?
+69 6 peat NONE ? ?
+69 0 sand NONE ? ?
+69 1 sand NONE ? ?
+69 2 sand NONE ? ?
+69 3 sand NONE ? ?
+69 4 sand NONE ? ?
+69 5 sand NONE ? ?
+69 6 sand NONE ? ?
+69 0 clay NONE ? ?
+69 1 clay NONE ? ?
+69 2 clay NONE ? ?
+69 3 clay NONE ? ?
+69 4 clay NONE ? ?
+69 5 clay NONE ? ?
+69 6 clay NONE ? ?
+69 0 sedimentary rocks NONE ? ?
+69 1 sedimentary rocks NONE ? ?
+69 2 sedimentary rocks NONE ? ?
+69 3 sedimentary rocks NONE ? ?
+69 4 sedimentary rocks NONE ? ?
+69 5 sedimentary rocks NONE ? ?
+69 6 sedimentary rocks NONE ? ?
+69 0 pressure NONE ? ?
+69 1 pressure NONE ? ?
+69 2 pressure NONE ? ?
+69 3 pressure NONE ? ?
+69 4 pressure NONE ? ?
+69 5 pressure NONE ? ?
+69 6 pressure NONE ? ?
+69 0 water NONE ? ?
+69 1 water NONE ? ?
+69 2 water NONE ? ?
+69 3 water NONE ? ?
+69 4 water NONE ? ?
+69 5 water NONE ? ?
+69 6 water NONE ? ?
+69 0 coal NONE ? ?
+69 1 coal NONE ? ?
+69 2 coal NONE ? ?
+69 3 coal NONE ? ?
+69 4 coal NONE ? ?
+69 5 coal NONE ? ?
+69 6 coal NONE ? ?
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train --test -ep 10
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint=None, epochs=10, lr=1.0, subset=None, test=True, train=True)
+num unique tokens : 2742
+embedding shape:  (2800, 50)
+2019-06-22 13:18:00.060406: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-22 13:18:00.477322: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-22 13:18:00.486621: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-22 13:18:01.245251: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-22 13:18:01.251580: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-22 13:18:01.255475: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-22 13:18:01.258746: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 200)     128800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 200)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 200)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 10)           16440       concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 200)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 210)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          31650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 200)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 10)           16440       concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 210)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          31650       concatenate_6[0][0]
+==================================================================================================
+Total params: 366,967
+Trainable params: 366,967
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (10356, 150)
+self.X2[train_idx].shape (10356, 150)
+self.X3[train_idx].shape (10356, 150)
+self.Y1[train_idx].shape (10356, 3)
+self.Y2[train_idx].shape (10356, 150)
+self.Y3[train_idx].shape (10356, 150)
+
+['loss', 'dense_1_loss', 'dense_2_loss', 'dense_3_loss', 'dense_1_acc', 'dense_2_acc', 'dense_3_acc']
+
+### Training starting
+
+Epoch 1/10
+Percent: [===================>] 100% # loss: 3.533, avg_cost: 1.971, acc: 0.466, 0.044, 0.046, time (min): 288.95
+Epoch 2/10
+Percent: [===================>] 100% # loss: 3.335, avg_cost: 1.970, acc: 0.461, 0.050, 0.052, time (min): 438.705
+Epoch 3/10
+Percent: [=>                  ]   8% # loss: 2.100, avg_cost: 1.915, acc: 0.460, 0.005, 0.010, time (min): 42.68forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source
+libifcoremd.dll    00007FFDC5BB94C4  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FFE087156FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFE0B724034  Unknown               Unknown  Unknown
+ntdll.dll          00007FFE0C073691  Unknown               Unknown  Unknown
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --test -ep 10 -ss 10 -cp "model2019-06-22_13-17-48 - Copy.h5"
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint='model2019-06-22_13-17-48 - Copy.h5', epochs=10, lr=1.0, subset=10, test=True, train=False)
+num unique tokens : 192
+embedding shape:  (2800, 50)
+2019-06-23 02:09:16.080796: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-23 02:09:16.528531: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-23 02:09:16.540812: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-23 02:09:17.992916: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-23 02:09:17.999777: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-23 02:09:18.004868: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-23 02:09:18.009784: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 200)     128800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 200)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 200)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 10)           16440       concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 200)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 210)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          31650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 200)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 10)           16440       concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 210)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          31650       concatenate_6[0][0]
+==================================================================================================
+Total params: 366,967
+Trainable params: 366,967
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+Model loaded from:  C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\checkpoints\model2019-06-22_13-17-48 - Copy.h5
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 200)     128800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 200)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 200)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 10)           16440       concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 200)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 210)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          31650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 200)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 10)           16440       concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 210)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          31650       concatenate_6[0][0]
+==================================================================================================
+Total params: 366,967
+Trainable params: 366,967
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+
+### Test starting
+Percent: [===================>] 100% # cost: 2.027, elapsed time (min): 4.48
+### Test finished
+final cost:  2.0273260501654526
+37 0 plant; animal CREATE - ?
+37 1 plant; animal MOVE ? tissues quickly decompose
+37 2 plant; animal MOVE tissues quickly decompose ?
+37 3 plant; animal NONE ? ?
+37 4 plant; animal NONE ? ?
+37 5 plant; animal NONE ? ?
+37 0 soft tissues NONE ? ?
+37 1 soft tissues NONE ? ?
+37 2 soft tissues NONE ? ?
+37 3 soft tissues NONE ? ?
+37 4 soft tissues NONE ? ?
+37 5 soft tissues NONE ? ?
+37 0 bones NONE ? ?
+37 1 bones NONE ? ?
+37 2 bones NONE ? ?
+37 3 bones NONE ? ?
+37 4 bones NONE ? ?
+37 5 bones NONE ? ?
+37 0 mineral NONE ? ?
+37 1 mineral NONE ? ?
+37 2 mineral NONE ? ?
+37 3 mineral NONE ? ?
+37 4 mineral NONE ? ?
+37 5 mineral NONE ? ?
+37 0 fossils NONE ? ?
+37 1 fossils NONE ? ?
+37 2 fossils NONE ? ?
+37 3 fossils NONE ? ?
+37 4 fossils NONE ? ?
+37 5 fossils NONE ? ?
+38 0 animal; body NONE ? ?
+38 1 animal; body NONE ? ?
+38 2 animal; body NONE ? ?
+38 3 animal; body NONE ? ?
+38 4 animal; body NONE ? ?
+38 5 animal; body NONE ? ?
+38 6 animal; body NONE ? ?
+38 0 soil NONE ? ?
+38 1 soil NONE ? ?
+38 2 soil NONE ? ?
+38 3 soil NONE ? ?
+38 4 soil NONE ? ?
+38 5 soil NONE ? ?
+38 6 soil NONE ? ?
+38 0 rock NONE ? ?
+38 1 rock NONE ? ?
+38 2 rock NONE ? ?
+38 3 rock NONE ? ?
+38 4 rock NONE ? ?
+38 5 rock NONE ? ?
+38 6 rock NONE ? ?
+38 0 fossil NONE ? ?
+38 1 fossil NONE ? ?
+38 2 fossil NONE ? ?
+38 3 fossil NONE ? ?
+38 4 fossil NONE ? ?
+38 5 fossil NONE ? ?
+38 6 fossil NONE ? ?
+67 0 plants; dead plants NONE ? ?
+67 1 plants; dead plants NONE ? ?
+67 2 plants; dead plants NONE ? ?
+67 3 plants; dead plants NONE ? ?
+67 4 plants; dead plants NONE ? ?
+67 5 plants; dead plants NONE ? ?
+67 6 plants; dead plants NONE ? ?
+67 7 plants; dead plants NONE ? ?
+67 8 plants; dead plants NONE ? ?
+67 0 peat NONE ? ?
+67 1 peat NONE ? ?
+67 2 peat NONE ? ?
+67 3 peat NONE ? ?
+67 4 peat NONE ? ?
+67 5 peat NONE ? ?
+67 6 peat NONE ? ?
+67 7 peat NONE ? ?
+67 8 peat NONE ? ?
+67 0 coal NONE ? ?
+67 1 coal NONE ? ?
+67 2 coal NONE ? ?
+67 3 coal NONE ? ?
+67 4 coal NONE ? ?
+67 5 coal NONE ? ?
+67 6 coal NONE ? ?
+67 7 coal NONE ? ?
+67 8 coal NONE ? ?
+68 0 plants; trees NONE ? ?
+68 1 plants; trees MOVE ? of
+68 2 plants; trees MOVE of ?
+68 3 plants; trees MOVE ? of
+68 4 plants; trees MOVE of ?
+68 5 plants; trees MOVE ? of
+68 6 plants; trees MOVE of ?
+68 0 plant and tree remains MOVE ? of
+68 1 plant and tree remains MOVE of ?
+68 2 plant and tree remains MOVE ? of
+68 3 plant and tree remains MOVE of ?
+68 4 plant and tree remains MOVE ? of
+68 5 plant and tree remains MOVE of ?
+68 6 plant and tree remains MOVE ? of
+68 0 peat; burial peat MOVE of ?
+68 1 peat; burial peat MOVE ? of steamy ,
+68 2 peat; burial peat MOVE of steamy , ?
+68 3 peat; burial peat MOVE ? of steamy ,
+68 4 peat; burial peat MOVE of steamy , ?
+68 5 peat; burial peat MOVE ? of steamy ,
+68 6 peat; burial peat MOVE of steamy , ?
+68 0 water MOVE ? of
+68 1 water MOVE of ?
+68 2 water MOVE ? of
+68 3 water MOVE of ?
+68 4 water MOVE ? of
+68 5 water MOVE of ?
+68 6 water MOVE ? of
+68 0 heat MOVE of ?
+68 1 heat MOVE ? plants
+68 2 heat MOVE plants ?
+68 3 heat MOVE ? plants
+68 4 heat MOVE plants ?
+68 5 heat MOVE ? plants
+68 6 heat MOVE plants ?
+68 0 coal MOVE ? of
+68 1 coal MOVE of ?
+68 2 coal MOVE ? of
+68 3 coal MOVE of ?
+68 4 coal MOVE ? of
+68 5 coal MOVE of ?
+68 6 coal MOVE ? of
+69 0 plants;trees MOVE plants ?
+69 1 plants;trees MOVE ? plants and trees
+69 2 plants;trees MOVE plants and trees ?
+69 3 plants;trees NONE ? ?
+69 4 plants;trees NONE ? ?
+69 5 plants;trees NONE ? ?
+69 6 plants;trees NONE ? ?
+69 0 peat MOVE ? plants and trees
+69 1 peat MOVE plants and trees ?
+69 2 peat MOVE ? plants and trees
+69 3 peat MOVE plants and trees ?
+69 4 peat NONE ? ?
+69 5 peat NONE ? ?
+69 6 peat NONE ? ?
+69 0 sand NONE ? ?
+69 1 sand NONE ? ?
+69 2 sand NONE ? ?
+69 3 sand NONE ? ?
+69 4 sand NONE ? ?
+69 5 sand NONE ? ?
+69 6 sand NONE ? ?
+69 0 clay NONE ? ?
+69 1 clay NONE ? ?
+69 2 clay NONE ? ?
+69 3 clay NONE ? ?
+69 4 clay NONE ? ?
+69 5 clay NONE ? ?
+69 6 clay NONE ? ?
+69 0 sedimentary rocks NONE ? ?
+69 1 sedimentary rocks NONE ? ?
+69 2 sedimentary rocks NONE ? ?
+69 3 sedimentary rocks NONE ? ?
+69 4 sedimentary rocks NONE ? ?
+69 5 sedimentary rocks NONE ? ?
+69 6 sedimentary rocks NONE ? ?
+69 0 pressure NONE ? ?
+69 1 pressure NONE ? ?
+69 2 pressure NONE ? ?
+69 3 pressure NONE ? ?
+69 4 pressure NONE ? ?
+69 5 pressure NONE ? ?
+69 6 pressure NONE ? ?
+69 0 water NONE ? ?
+69 1 water NONE ? ?
+69 2 water NONE ? ?
+69 3 water NONE ? ?
+69 4 water NONE ? ?
+69 5 water NONE ? ?
+69 6 water NONE ? ?
+69 0 coal NONE ? ?
+69 1 coal NONE ? ?
+69 2 coal NONE ? ?
+69 3 coal NONE ? ?
+69 4 coal NONE ? ?
+69 5 coal NONE ? ?
+69 6 coal NONE ? ?
+70 0 rain NONE ? ?
+70 1 rain MOVE ? builds up on
+70 2 rain MOVE builds up on ?
+70 3 rain MOVE ? builds up on
+70 4 rain MOVE builds up on ?
+70 5 rain NONE ? ?
+70 6 rain NONE ? ?
+70 7 rain NONE ? ?
+70 0 water NONE ? ?
+70 1 water NONE ? ?
+70 2 water NONE ? ?
+70 3 water NONE ? ?
+70 4 water NONE ? ?
+70 5 water NONE ? ?
+70 6 water NONE ? ?
+70 7 water NONE ? ?
+70 0 streams NONE ? ?
+70 1 streams NONE ? ?
+70 2 streams NONE ? ?
+70 3 streams NONE ? ?
+70 4 streams NONE ? ?
+70 5 streams NONE ? ?
+70 6 streams NONE ? ?
+70 7 streams NONE ? ?
+70 0 water levels NONE ? ?
+70 1 water levels NONE ? ?
+70 2 water levels NONE ? ?
+70 3 water levels NONE ? ?
+70 4 water levels NONE ? ?
+70 5 water levels NONE ? ?
+70 6 water levels NONE ? ?
+70 7 water levels NONE ? ?
+99 0 rain clouds NONE ? ?
+99 1 rain clouds MOVE ? the rain clouds
+99 2 rain clouds MOVE the rain clouds ?
+99 3 rain clouds MOVE ? the rain clouds
+99 4 rain clouds MOVE the rain clouds ?
+99 5 rain clouds MOVE ? the rain clouds
+99 6 rain clouds MOVE the rain clouds ?
+99 0 rain MOVE ? the
+99 1 rain MOVE the ?
+99 2 rain MOVE ? the
+99 3 rain MOVE the ?
+99 4 rain MOVE ? the
+99 5 rain MOVE the ?
+99 6 rain MOVE ? the
+99 0 clouds MOVE the ?
+99 1 clouds MOVE ? the
+99 2 clouds MOVE the ?
+99 3 clouds MOVE ? the
+99 4 clouds MOVE the ?
+99 5 clouds MOVE ? the
+99 6 clouds MOVE the ?
+99 0 a very different ecosystem MOVE ? the
+99 1 a very different ecosystem MOVE the ?
+99 2 a very different ecosystem MOVE ? the
+99 3 a very different ecosystem MOVE the ?
+99 4 a very different ecosystem MOVE ? the
+99 5 a very different ecosystem MOVE the ?
+99 6 a very different ecosystem MOVE ? the
+99 0 desert MOVE the ?
+99 1 desert MOVE ? the
+99 2 desert MOVE the ?
+99 3 desert MOVE ? the
+99 4 desert MOVE the ?
+99 5 desert MOVE ? the
+99 6 desert MOVE the ?
+152 0 water vapor ; lifted vapor ; vapor NONE ? ?
+152 1 water vapor ; lifted vapor ; vapor NONE ? ?
+152 2 water vapor ; lifted vapor ; vapor NONE ? ?
+152 3 water vapor ; lifted vapor ; vapor NONE ? ?
+152 4 water vapor ; lifted vapor ; vapor NONE ? ?
+152 5 water vapor ; lifted vapor ; vapor NONE ? ?
+152 0 solid ; cloud droplets NONE ? ?
+152 1 solid ; cloud droplets NONE ? ?
+152 2 solid ; cloud droplets NONE ? ?
+152 3 solid ; cloud droplets NONE ? ?
+152 4 solid ; cloud droplets NONE ? ?
+152 5 solid ; cloud droplets NONE ? ?
+249 0 rocks ; smaller pieces NONE ? ?
+249 1 rocks ; smaller pieces MOVE ? smaller
+249 2 rocks ; smaller pieces MOVE smaller ?
+249 3 rocks ; smaller pieces NONE ? ?
+249 4 rocks ; smaller pieces NONE ? ?
+249 5 rocks ; smaller pieces NONE ? ?
+249 6 rocks ; smaller pieces NONE ? ?
+249 7 rocks ; smaller pieces NONE ? ?
+249 0 oxygen NONE ? ?
+249 1 oxygen NONE ? ?
+249 2 oxygen NONE ? ?
+249 3 oxygen NONE ? ?
+249 4 oxygen NONE ? ?
+249 5 oxygen NONE ? ?
+249 6 oxygen NONE ? ?
+249 7 oxygen NONE ? ?
+249 0 new types of rocks ; new substance ; certain types of rocks NONE ? ?
+249 1 new types of rocks ; new substance ; certain types of rocks NONE ? ?
+249 2 new types of rocks ; new substance ; certain types of rocks NONE ? ?
+249 3 new types of rocks ; new substance ; certain types of rocks NONE ? ?
+249 4 new types of rocks ; new substance ; certain types of rocks NONE ? ?
+249 5 new types of rocks ; new substance ; certain types of rocks NONE ? ?
+249 6 new types of rocks ; new substance ; certain types of rocks NONE ? ?
+249 7 new types of rocks ; new substance ; certain types of rocks NONE ? ?
+310 0 blood NONE ? ?
+310 1 blood NONE ? ?
+310 2 blood NONE ? ?
+310 3 blood NONE ? ?
+310 4 blood NONE ? ?
+310 5 blood NONE ? ?
+310 0 carbon dioxide NONE ? ?
+310 1 carbon dioxide NONE ? ?
+310 2 carbon dioxide NONE ? ?
+310 3 carbon dioxide NONE ? ?
+310 4 carbon dioxide NONE ? ?
+310 5 carbon dioxide NONE ? ?
+310 0 oxygen NONE ? ?
+310 1 oxygen NONE ? ?
+310 2 oxygen NONE ? ?
+310 3 oxygen NONE ? ?
+310 4 oxygen NONE ? ?
+310 5 oxygen NONE ? ?
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --test -ep 10 -ss 3 -cp "model2019-06-22_13-17-48 - Copy.h5"
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint='model2019-06-22_13-17-48 - Copy.h5', epochs=10, lr=1.0, subset=3, test=True, train=False)
+num unique tokens : 107
+embedding shape:  (2800, 50)
+2019-06-23 02:16:57.972287: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-23 02:16:58.397523: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-23 02:16:58.410373: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-23 02:16:59.157852: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-23 02:16:59.163288: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-23 02:16:59.167129: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-23 02:16:59.170314: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 200)     128800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 200)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 200)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 10)           16440       concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 200)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 210)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          31650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 200)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 10)           16440       concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 210)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          31650       concatenate_6[0][0]
+==================================================================================================
+Total params: 366,967
+Trainable params: 366,967
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+Model loaded from:  C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\checkpoints\model2019-06-22_13-17-48 - Copy.h5
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 200)     128800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 200)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 200)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 10)           16440       concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 200)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 210)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          31650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 200)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 10)           16440       concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 210)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          31650       concatenate_6[0][0]
+==================================================================================================
+Total params: 366,967
+Trainable params: 366,967
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+
+### Test starting
+Percent: [===================>] 100% # avg_cost: 1.977, acc: 0.506, 0.000, 0.000, time (min): 1.12
+### Test finished
+final cost:  1.976639890846084
+37 0 plant; animal CREATE - ?
+37 1 plant; animal NONE ? ?
+37 2 plant; animal NONE ? ?
+37 3 plant; animal NONE ? ?
+37 4 plant; animal NONE ? ?
+37 5 plant; animal NONE ? ?
+37 0 soft tissues NONE ? ?
+37 1 soft tissues NONE ? ?
+37 2 soft tissues NONE ? ?
+37 3 soft tissues NONE ? ?
+37 4 soft tissues NONE ? ?
+37 5 soft tissues NONE ? ?
+37 0 bones NONE ? ?
+37 1 bones NONE ? ?
+37 2 bones NONE ? ?
+37 3 bones NONE ? ?
+37 4 bones NONE ? ?
+37 5 bones NONE ? ?
+37 0 mineral NONE ? ?
+37 1 mineral NONE ? ?
+37 2 mineral NONE ? ?
+37 3 mineral NONE ? ?
+37 4 mineral NONE ? ?
+37 5 mineral NONE ? ?
+37 0 fossils NONE ? ?
+37 1 fossils NONE ? ?
+37 2 fossils NONE ? ?
+37 3 fossils NONE ? ?
+37 4 fossils NONE ? ?
+37 5 fossils NONE ? ?
+38 0 animal; body NONE ? ?
+38 1 animal; body NONE ? ?
+38 2 animal; body NONE ? ?
+38 3 animal; body NONE ? ?
+38 4 animal; body NONE ? ?
+38 5 animal; body NONE ? ?
+38 6 animal; body NONE ? ?
+38 0 soil NONE ? ?
+38 1 soil NONE ? ?
+38 2 soil NONE ? ?
+38 3 soil NONE ? ?
+38 4 soil NONE ? ?
+38 5 soil NONE ? ?
+38 6 soil NONE ? ?
+38 0 rock NONE ? ?
+38 1 rock NONE ? ?
+38 2 rock NONE ? ?
+38 3 rock NONE ? ?
+38 4 rock NONE ? ?
+38 5 rock NONE ? ?
+38 6 rock NONE ? ?
+38 0 fossil NONE ? ?
+38 1 fossil NONE ? ?
+38 2 fossil NONE ? ?
+38 3 fossil NONE ? ?
+38 4 fossil NONE ? ?
+38 5 fossil NONE ? ?
+38 6 fossil NONE ? ?
+67 0 plants; dead plants NONE ? ?
+67 1 plants; dead plants NONE ? ?
+67 2 plants; dead plants NONE ? ?
+67 3 plants; dead plants MOVE ? of
+67 4 plants; dead plants MOVE of ?
+67 5 plants; dead plants NONE ? ?
+67 6 plants; dead plants NONE ? ?
+67 7 plants; dead plants MOVE ? of the swamps
+67 8 plants; dead plants MOVE of the swamps ?
+67 0 peat NONE ? ?
+67 1 peat NONE ? ?
+67 2 peat NONE ? ?
+67 3 peat NONE ? ?
+67 4 peat NONE ? ?
+67 5 peat NONE ? ?
+67 6 peat NONE ? ?
+67 7 peat NONE ? ?
+67 8 peat NONE ? ?
+67 0 coal NONE ? ?
+67 1 coal NONE ? ?
+67 2 coal NONE ? ?
+67 3 coal NONE ? ?
+67 4 coal NONE ? ?
+67 5 coal NONE ? ?
+67 6 coal NONE ? ?
+67 7 coal NONE ? ?
+67 8 coal NONE ? ?
+
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>
+C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497>python main.py --train -ep 5 -cp "model2019-06-22_13-17-48.h5"
+C:\Users\danil\AppData\Local\Continuum\anaconda3\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Using TensorFlow backend.
+
+ARGS =  Namespace(checkpoint='model2019-06-22_13-17-48.h5', epochs=5, lr=1.0, subset=None, test=False, train=True)
+num unique tokens : 2742
+embedding shape:  (2800, 50)
+2019-06-23 02:20:07.214563: I T:\src\github\tensorflow\tensorflow\core\platform\cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2019-06-23 02:20:07.644573: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1392] Found device 0 with properties:
+name: GeForce 940MX major: 5 minor: 0 memoryClockRate(GHz): 1.189
+pciBusID: 0000:01:00.0
+totalMemory: 2.00GiB freeMemory: 1.65GiB
+2019-06-23 02:20:07.653230: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1471] Adding visible gpu devices: 0
+2019-06-23 02:20:08.375852: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:952] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-06-23 02:20:08.381792: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:958]      0
+2019-06-23 02:20:08.385665: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:971] 0:   N
+2019-06-23 02:20:08.388917: I T:\src\github\tensorflow\tensorflow\core\common_runtime\gpu\gpu_device.cc:1084] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1414 MB memory) -> physical GPU (device: 0, name: GeForce 940MX, pci bus id: 0000:01:00.0, compute capability: 5.0)
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 200)     128800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 200)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 200)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 10)           16440       concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 200)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 210)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          31650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 200)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 10)           16440       concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 210)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          31650       concatenate_6[0][0]
+==================================================================================================
+Total params: 366,967
+Trainable params: 366,967
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+Model loaded from:  C:\Users\danil\Documents\Northwestern\2019-2 Spring\COMP_SCI 497\Course Project\propara-cs497\checkpoints\model2019-06-22_13-17-48.h5
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_2 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+input_3 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+embedding_1 (Embedding)         (None, 150, 50)      140000      input_1[0][0]
+__________________________________________________________________________________________________
+embedding_2 (Embedding)         (None, 150, 5)       1505        input_2[0][0]
+__________________________________________________________________________________________________
+embedding_3 (Embedding)         (None, 150, 5)       20          input_3[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 150, 60)      0           embedding_1[0][0]
+                                                                 embedding_2[0][0]
+                                                                 embedding_3[0][0]
+__________________________________________________________________________________________________
+input_6 (InputLayer)            (None, 150)          0
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 150, 200)     128800      concatenate_1[0][0]
+__________________________________________________________________________________________________
+reshape_2 (Reshape)             (None, 150, 1)       0           input_6[0][0]
+__________________________________________________________________________________________________
+multiply_1 (Multiply)           (None, 150, 200)     0           reshape_2[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_1[0][0]
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 1, 200)       0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_2 (LSTM)                   (None, 10)           16440       concatenate_3[0][0]
+__________________________________________________________________________________________________
+reshape_1 (Reshape)             (None, 200)          0           lambda_1[0][0]
+__________________________________________________________________________________________________
+concatenate_4 (Concatenate)     (None, 210)          0           lstm_2[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_2 (Dense)                 (None, 150)          31650       concatenate_4[0][0]
+__________________________________________________________________________________________________
+reshape_3 (Reshape)             (None, 150, 1)       0           dense_2[0][0]
+__________________________________________________________________________________________________
+multiply_2 (Multiply)           (None, 150, 200)     0           reshape_3[0][0]
+                                                                 bidirectional_1[0][0]
+__________________________________________________________________________________________________
+concatenate_5 (Concatenate)     (None, 150, 400)     0           bidirectional_1[0][0]
+                                                                 multiply_2[0][0]
+__________________________________________________________________________________________________
+input_5 (InputLayer)            (None, 3)            0
+__________________________________________________________________________________________________
+global_max_pooling1d_1 (GlobalM (None, 150)          0           bidirectional_1[0][0]
+__________________________________________________________________________________________________
+lstm_3 (LSTM)                   (None, 10)           16440       concatenate_5[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 153)          0           input_5[0][0]
+                                                                 global_max_pooling1d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_6 (Concatenate)     (None, 210)          0           lstm_3[0][0]
+                                                                 reshape_1[0][0]
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 3)            462         concatenate_2[0][0]
+__________________________________________________________________________________________________
+dense_3 (Dense)                 (None, 150)          31650       concatenate_6[0][0]
+==================================================================================================
+Total params: 366,967
+Trainable params: 366,967
+Non-trainable params: 0
+__________________________________________________________________________________________________
+self.model.summary() None
+self.X1[train_idx].shape (10356, 150)
+self.X2[train_idx].shape (10356, 150)
+self.X3[train_idx].shape (10356, 150)
+self.Y1[train_idx].shape (10356, 3)
+self.Y2[train_idx].shape (10356, 150)
+self.Y3[train_idx].shape (10356, 150)
+
+['loss', 'dense_1_loss', 'dense_2_loss', 'dense_3_loss', 'dense_1_acc', 'dense_2_acc', 'dense_3_acc']
+
+### Training starting
+
+Epoch 1/5
+[9078, 6675, 3435, 9619, 8962, 6771, 3773, 8223, 664, 1228]
+Percent: [===================>] 100% # loss: 2.972, avg_cost: 1.952, acc: 0.461, 0.043, 0.045, time (min): 557.068
+Epoch 2/5
+[6267, 9995, 1350, 2898, 3086, 4505, 2495, 6538, 1324, 7809]
+Percent: [===================>] 100% # loss: 2.127, avg_cost: 1.844, acc: 0.467, 0.063, 0.067, time (min): 363.90
+Epoch 3/5
+[6173, 9056, 8696, 3727, 3826, 7416, 2828, 4166, 3105, 5009]
+Percent: [===================>] 100% # loss: 2.657, avg_cost: 1.917, acc: 0.471, 0.056, 0.056, time (min): 317.716
+Epoch 4/5
+[1152, 7040, 7865, 6801, 10143, 218, 10000, 8523, 9070, 2487]
+Percent: [>                   ]   2% # loss: 1.146, avg_cost: 2.141, acc: 0.584, 0.006, 0.006, time (min): 6.42forrtl: error (200): program aborting due to control-C event
+Image              PC

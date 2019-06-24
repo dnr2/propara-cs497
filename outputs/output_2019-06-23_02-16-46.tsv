@@ -1,0 +1,85 @@
+37	0	plant; animal	CREATE	-	?
+37	1	plant; animal	NONE	?	?
+37	2	plant; animal	NONE	?	?
+37	3	plant; animal	NONE	?	?
+37	4	plant; animal	NONE	?	?
+37	5	plant; animal	NONE	?	?
+37	0	soft tissues	NONE	?	?
+37	1	soft tissues	NONE	?	?
+37	2	soft tissues	NONE	?	?
+37	3	soft tissues	NONE	?	?
+37	4	soft tissues	NONE	?	?
+37	5	soft tissues	NONE	?	?
+37	0	bones	NONE	?	?
+37	1	bones	NONE	?	?
+37	2	bones	NONE	?	?
+37	3	bones	NONE	?	?
+37	4	bones	NONE	?	?
+37	5	bones	NONE	?	?
+37	0	mineral	NONE	?	?
+37	1	mineral	NONE	?	?
+37	2	mineral	NONE	?	?
+37	3	mineral	NONE	?	?
+37	4	mineral	NONE	?	?
+37	5	mineral	NONE	?	?
+37	0	fossils	NONE	?	?
+37	1	fossils	NONE	?	?
+37	2	fossils	NONE	?	?
+37	3	fossils	NONE	?	?
+37	4	fossils	NONE	?	?
+37	5	fossils	NONE	?	?
+38	0	animal; body	NONE	?	?
+38	1	animal; body	NONE	?	?
+38	2	animal; body	NONE	?	?
+38	3	animal; body	NONE	?	?
+38	4	animal; body	NONE	?	?
+38	5	animal; body	NONE	?	?
+38	6	animal; body	NONE	?	?
+38	0	soil	NONE	?	?
+38	1	soil	NONE	?	?
+38	2	soil	NONE	?	?
+38	3	soil	NONE	?	?
+38	4	soil	NONE	?	?
+38	5	soil	NONE	?	?
+38	6	soil	NONE	?	?
+38	0	rock	NONE	?	?
+38	1	rock	NONE	?	?
+38	2	rock	NONE	?	?
+38	3	rock	NONE	?	?
+38	4	rock	NONE	?	?
+38	5	rock	NONE	?	?
+38	6	rock	NONE	?	?
+38	0	fossil	NONE	?	?
+38	1	fossil	NONE	?	?
+38	2	fossil	NONE	?	?
+38	3	fossil	NONE	?	?
+38	4	fossil	NONE	?	?
+38	5	fossil	NONE	?	?
+38	6	fossil	NONE	?	?
+67	0	plants; dead plants	NONE	?	?
+67	1	plants; dead plants	NONE	?	?
+67	2	plants; dead plants	NONE	?	?
+67	3	plants; dead plants	MOVE	?	of
+67	4	plants; dead plants	MOVE	of	?
+67	5	plants; dead plants	NONE	?	?
+67	6	plants; dead plants	NONE	?	?
+67	7	plants; dead plants	MOVE	?	of the swamps
+67	8	plants; dead plants	MOVE	of the swamps	?
+67	0	peat	NONE	?	?
+67	1	peat	NONE	?	?
+67	2	peat	NONE	?	?
+67	3	peat	NONE	?	?
+67	4	peat	NONE	?	?
+67	5	peat	NONE	?	?
+67	6	peat	NONE	?	?
+67	7	peat	NONE	?	?
+67	8	peat	NONE	?	?
+67	0	coal	NONE	?	?
+67	1	coal	NONE	?	?
+67	2	coal	NONE	?	?
+67	3	coal	NONE	?	?
+67	4	coal	NONE	?	?
+67	5	coal	NONE	?	?
+67	6	coal	NONE	?	?
+67	7	coal	NONE	?	?
+67	8	coal	NONE	?	?

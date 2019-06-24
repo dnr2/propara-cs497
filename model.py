@@ -357,9 +357,9 @@ class NeuralModel:
 
     def _get_inputs_and_outputs(self, part_index, sample_idx, y1_prev, y2_prev):
         ph_idx, p, s = self.sample_idx_map[part_index][sample_idx]
-        if (p == 0 and s == 0) or y1_prev is None:
+        if s == 0 or y1_prev is None:
             y1_prev = np.array([self.NUM_CATEGORIES * [1.0 / self.NUM_CATEGORIES]])
-        if (p == 0 and s == 0) or y2_prev is None:
+        if s == 0 or y2_prev is None:
             y2_prev = np.array([self.MAX_SEQUENCE_LENGTH * [1.0 / self.MAX_SEQUENCE_LENGTH]])
 
         x1 = self.X1[part_index][sample_idx:sample_idx+1]
@@ -484,7 +484,7 @@ class NeuralModel:
         test_idx = self.loader.part["test"]
         num_samples = len(self.X1[test_idx])
         data = self.loader.data[test_idx]
-        cost = 0
+        cost = category_acc = start_acc = end_acc = 0
         start_time = time.time()
 
         # record previous outputs
@@ -496,19 +496,27 @@ class NeuralModel:
             # run prediction on test sample
             inputs, outputs = self._get_inputs_and_outputs(
                 test_idx, sample_idx, y1_prev, y2_prev)
-            loss = self.model.test_on_batch(x=inputs, y=outputs)
+            metrics = self.model.test_on_batch(x=inputs, y=outputs)
             y_cur = self.model.predict_on_batch(x=inputs)
             self._update_output_grid(output_grid, data, sample_idx, 
                 y_cur, y_prev = [y1_prev, y2_prev, y3_prev])
             y1_prev, y2_prev, y3_prev = y_cur
 
             # print current stats
-            cost += loss[0]
+            cost += metrics[0]
+            category_acc += metrics[4]
+            start_acc += metrics[5]
+            end_acc += metrics[6]
+
             if sample_idx % 10 == 0 or sample_idx == (num_samples-1):
                 avg_cost = float(cost / (sample_idx + 1))
+                avg_category_acc = float(category_acc / (sample_idx + 1))
+                avg_start_acc = float(start_acc / (sample_idx + 1))
+                avg_end_acc = float(end_acc / (sample_idx + 1))
                 elapsed_time = (time.time() - start_time) / 60.0
                 self.print_progress_bar(sample_idx + 1, num_samples, 
-                    "cost: %.3f, elapsed time (min): %.2f" % (avg_cost, elapsed_time))
+                        "avg_cost: %.3f, acc: %.3f, %.3f, %.3f, time (min): %.2f" % (avg_cost, 
+                            avg_category_acc, avg_start_acc, avg_end_acc, elapsed_time))
         final_cost = cost/num_samples
         print("\n### Test finished")
         print("final cost: ", final_cost)

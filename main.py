@@ -46,15 +46,15 @@ def plot_and_save_cost_history(cost_history):
     plt.savefig(fig_filename)
 
 def print_and_save_output_grid(output_grid):
-    # print to console
-    for l in output_grid:
+    # print to console (only first 10  lines) 
+    for l in output_grid[:10]:
         for c, value in enumerate(l):
             if c > 0:
                 print(" ", end="")
             print(str(value), end="")
         print()
-
-    with open("output_%s.tsv" % FILE_TIME_SUFFIX, "w") as file:
+    output_file = os.path.join(os.getcwd(), "outputs", "output_%s.tsv" % FILE_TIME_SUFFIX)
+    with open(output_file, "w") as file:
         # save in output file.
         for l in output_grid:
             for c, value in enumerate(l):
