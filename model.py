@@ -462,7 +462,7 @@ class NeuralModel:
         ph_idx, p, s = self.sample_idx_map[test_idx][sample_idx]
         paragraph = data[ph_idx]
         pid = paragraph["PID"]
-        participant = paragraph["participants"][p]
+        participant = paragraph["participants_orig"][p]
         change = "NONE"
         paragraph_tokens = self.ph_idx_tokens_map[test_idx][ph_idx]
         from_loc = self._get_position(y_prev, paragraph_tokens)

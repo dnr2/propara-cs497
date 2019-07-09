@@ -64,11 +64,13 @@ class Loader:
         with open(self.data_fname, newline='') as tsvfile:
             reader = csv.reader(tsvfile, delimiter='\t')
             for row in reader:
+                orig_row = list(filter(None, row)) # original (non modified) text for output.
                 row = list(map(lambda s: s.lower(), filter(None, row)))
                 if len(row) > 0:
                     if row[1] == "sid":
                         paragraph = {"PID": row[0], "participants": row[3:], "states": [], 
-                                     "sentences": [], "predictions": []}
+                                     "sentences": [], "predictions": [], 
+                                     "participants_orig": orig_row[3:]}
                     if row[1].startswith("state"):
                         paragraph["states"].append(row[2:])
                     if row[1].startswith("event"):

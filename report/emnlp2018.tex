@@ -41,7 +41,7 @@
   {\tt u.northwestern.edu} \\\And
   William Hancock \\
   todo123 \\
-  {\tt WilliamHancock2022@ } \\
+  {\tt williamhancock2022@ } \\
   {\tt u.northwestern.edu } \\}
 
 \date{}
@@ -95,7 +95,17 @@ location is unknown, and "-" indicates the entity doesn't exist during that step
 
 \section{Model and Implementation}
 
-TODO
+In this project we implement a model similar to ProGlobal, which was 
+introduced in Dalvi et. al. The key feature of this model is that it predicts 
+the state of \textit{all} participants at each timestep (even if the participant is 
+not mentioned in a sentence). Therefore the persistence of the states are 
+tracked by the model itself. 
+
+\begin{figure}[h]
+\includegraphics[width=16cm]{proglobal.PNG}
+\caption{Diagram describing the ProGlobal model. The input of the model is the whole paragraph, plus features indicading the current sentence and the distance to the participant. Previous step predictions are fed to next step prediction}
+\label{fig:participant-grid}
+\end{figure}
 
 \section{Evaluation and Results}
 
@@ -119,11 +129,26 @@ at \url{https://github.com/allenai/aristo-leaderboard/tree/master/propara} by
 the AI2 team. The code outputs precision, recall and F1 score for each 
 question category.
 
+\begin{table}[t!]
+\begin{center}
+\begin{tabular}{|l|ccc|}
+\hline  \bf Model &  \bf Precision &  \bf Recal &  \bf F1 \\ \hline
+ProLocal & \bf 77.4 & 22.9 & 35.3 \\
+ProGlobal & 46.7 & \bf 52.4 & 49.4 \\
+ProStruct & 74.2 & 42.1 & \bf 53.7 \\
+\hline
+\bf Our Results & 76.9 & 25.0 & 37.7 \\
+\hline
+\end{tabular}
+\end{center}
+\caption{ Results on test set. }
+\end{table}
+
 \section{Conclusion}
 
 TODO
 
-\bibliography{emnlp2018}
-\bibliographystyle{acl_natbib_nourl}
+%\bibliography{emnlp2018}
+%\bibliographystyle{acl_natbib_nourl}
 
 \end{document}

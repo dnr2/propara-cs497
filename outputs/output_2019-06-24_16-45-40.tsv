@@ -1,0 +1,20 @@
+933	0	water	CREATE	-	?
+933	1	water	MOVE	?	mineral
+933	2	water	MOVE	mineral	?
+933	3	water	MOVE	?	mineral
+933	4	water	MOVE	mineral	?
+933	0	carbon dioxide	NONE	?	?
+933	1	carbon dioxide	MOVE	?	mineral
+933	2	carbon dioxide	MOVE	mineral	?
+933	3	carbon dioxide	MOVE	?	mineral
+933	4	carbon dioxide	MOVE	mineral	?
+933	0	mineral based material	NONE	?	?
+933	1	mineral based material	MOVE	?	mineral
+933	2	mineral based material	MOVE	mineral	?
+933	3	mineral based material	MOVE	?	mineral
+933	4	mineral based material	MOVE	mineral	?
+933	0	rock	NONE	?	?
+933	1	rock	MOVE	?	carbon
+933	2	rock	MOVE	carbon	?
+933	3	rock	MOVE	?	carbon
+933	4	rock	MOVE	carbon	?

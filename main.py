@@ -75,6 +75,9 @@ def main(args):
         for i in range(len(loader.part)):
             loader.data[i] = loader.data[i][:args.subset]
     
+    # TODO: remove
+    loader.data[2] = loader.data[2][-1:]
+
     model = None
     checkpoint_path = os.path.join(os.getcwd(), "checkpoints", "model%s.h5" % FILE_TIME_SUFFIX)
     if args.checkpoint is not None:

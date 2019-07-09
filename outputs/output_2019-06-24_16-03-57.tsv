@@ -1,0 +1,30 @@
+37	0	plant; animal	CREATE	-	?
+37	1	plant; animal	MOVE	?	tissues quickly decompose
+37	2	plant; animal	MOVE	tissues quickly decompose	?
+37	3	plant; animal	MOVE	?	tissues quickly decompose
+37	4	plant; animal	MOVE	tissues quickly decompose	?
+37	5	plant; animal	MOVE	?	tissues quickly decompose
+37	0	soft tissues	MOVE	tissues quickly decompose	?
+37	1	soft tissues	NONE	?	?
+37	2	soft tissues	NONE	?	?
+37	3	soft tissues	NONE	?	?
+37	4	soft tissues	NONE	?	?
+37	5	soft tissues	NONE	?	?
+37	0	bones	NONE	?	?
+37	1	bones	MOVE	?	tissues quickly decompose
+37	2	bones	MOVE	tissues quickly decompose	?
+37	3	bones	MOVE	?	tissues quickly decompose
+37	4	bones	MOVE	tissues quickly decompose	?
+37	5	bones	MOVE	?	tissues quickly decompose
+37	0	mineral	MOVE	tissues quickly decompose	?
+37	1	mineral	MOVE	?	dies
+37	2	mineral	MOVE	dies	?
+37	3	mineral	MOVE	?	dies
+37	4	mineral	MOVE	dies	?
+37	5	mineral	NONE	?	?
+37	0	fossils	NONE	?	?
+37	1	fossils	MOVE	?	dies in a
+37	2	fossils	MOVE	dies in a	?
+37	3	fossils	MOVE	?	dies in a
+37	4	fossils	MOVE	dies in a	?
+37	5	fossils	MOVE	?	dies in a
