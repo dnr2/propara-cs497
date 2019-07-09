@@ -40,8 +40,8 @@
   {\tt daniloribeiro2021@} \\
   {\tt u.northwestern.edu} \\\And
   William Hancock \\
-  todo123 \\
-  {\tt williamhancock2022@ } \\
+  wwh7118 \\
+  {\tt WilliamHancock2022@ } \\
   {\tt u.northwestern.edu } \\}
 
 \date{}
@@ -102,10 +102,16 @@ not mentioned in a sentence). Therefore the persistence of the states are
 tracked by the model itself. 
 
 \begin{figure}[h]
-\includegraphics[width=16cm]{proglobal.PNG}
+\includegraphics[width=\linewidth]{proglobal.PNG}
 \caption{Diagram describing the ProGlobal model. The input of the model is the whole paragraph, plus features indicading the current sentence and the distance to the participant. Previous step predictions are fed to next step prediction}
 \label{fig:participant-grid}
 \end{figure}
+
+Attention in proglobal is more complicated than that of a simple seq2seq architecture, due to the fact that proglobal is more complex. A bidirectional lstm learns a hidden global state H for each paragraph. This hidden state is then passed to various submodules.
+
+The architecture works as follows. For each sentence in each paragraph, learn information about a participating entity, e.g. water. First, a decision is made as to the state of the entity in a sentence, e.g. exists, notexists, or unknown. If exists, then infer the location of the entity, e.g. “water is in the ground”.
+
+The existential submodule arguably does not use attention, as it takes softmax(H) as input. On the other hand, the location submodule receives the full paragraph hidden state. We note that the visualizations show the value of every word in every timestep. However, the model only considers words within each timestep (in other words it does not look ahead to future sentences to infer location).
 
 \section{Evaluation and Results}
 
@@ -144,9 +150,51 @@ ProStruct & 74.2 & 42.1 & \bf 53.7 \\
 \caption{ Results on test set. }
 \end{table}
 
+
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{images/rain.png}
+  \caption{Rain}
+  \label{fig:boat1}
+\end{figure}
+
+For “rain”, the network infers the location “there” in the first sentence. This is an interesting artifact of this neural model It assumes that it has to tie a location to a word. “there” seems odd, but can be interpreted as technically correct. This is a limitation of the problem as it is set up, and not anything with the architecture itself.
+
+The model infers that “rain” is in the ground in sentences 2 and 3. Sentence 4 is complicated, in that it is ambiguous. The water divides itself, now being both in and above the soil. The model actually infers that the water goes from the “ground” to the “soil”, not realizing that this is the same thing. From a commonsense perspective however, the correct answer seems to be “above the ground”. The negation of “instead” seems to be ignored by the model. It is clear that “soil” is overwhelmingly preferred by the attention mechanism. Perhaps because it is close in embedding space to “rain”? 
+
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{images/plant.png}
+  \caption{Plant}
+  \label{fig:boat1}
+\end{figure}
+
+The model infers that “plant” appears in the last sentence, and is in the soil. I have no interpretation for this, as “soil” does not appear in the last sentence. Because this network is recurrent however, the overwhelming weight on “soil” must force the model to choose this location. “tree” (not shown) looks very identical to “plant”, but the models infers that it is never introduced into a location.
+
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{images/heat.png}
+  \caption{Heat}
+  \label{fig:boat1}
+\end{figure}
+
+The model infers heat’s path is “fan -> fan -> null -> condenser -> null -> condenser -> null”
+This thrashing is interesting, and it doesn’t follow the narrative in the paragraph. The correct trajectory should be “air -> coil / gas / refrigerant”. Clearly there is no commonsense here, the model seems to have a high prior for “condenser” and is overwhelmingly selecting this location. There is no commonsense of temporal stability either, in that it seems unreasonable for the location to fluctuate as it does. 
+
+
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{images/liquid.png}
+  \caption{Liquid}
+  \label{fig:boat1}
+\end{figure}
+
+To further illustrate this point, the model infers that liquid is at “gas” in sentence 3. This can almost certainly be attributed to a close embedding. There is no commonsense understanding that gas is not a container, nor that something cannot be liquid and gas.
+
 \section{Conclusion}
 
-TODO
+It is clear that the problem of reasoning on a human level about these types of causal narratives is elusive. Can this model be said to be performing commonsense reasoning? Is this model useful in any sense? Can DL ever solve these problems? Is this a useful empirical evaluation?
+
+The evaluation itself is oversimplified. This is almost certainly in order to make backprop more tractable while still appearing to be getting interesting results. The constraint on one span per transformation is evidence of this. This is simply unreasonable. An elaborate discussion on this matter can be found here: https://towardsdatascience.com/the-emperors-new-benchmarks-8fe8f170923b.
+Suffice it to say, the system will never grasp the complexity of the intended reasoning domain. This paper seems to show that neural networks can learn arbitrarily complex functions. That’s it. The problem is that the function being learned in this situation isn’t inherently useful (it will probably not generalize to other data of this sort).
+
+How general is the ProGlobal model architecture? It does seem to be making some effort to be globally generally. Its assumptions are that there are objects, and their locations should be tracked. It is assuming some sort of persistence and continuation. In this sense it does seem to reasonably model a low level of causal understanding. Perhaps more deductive reasoners can be placed on top of this information to produce more intuitive and interesting results. It seems reasonable to question whether this will actually work, however. There seems to be a need for commonsense reasoning even at this low level in order to prevent some of the nonsensical conclusions.
 
 %\bibliography{emnlp2018}
 %\bibliographystyle{acl_natbib_nourl}
